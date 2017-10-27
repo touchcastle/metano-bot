@@ -1,5 +1,6 @@
 const airport = require('./airports.strategy')
 
 module.exports = [
-  airport.metarStrategy
+  airport.metarStrategy,
+  airport.tafStrategy
 ]

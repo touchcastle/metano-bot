@@ -1,5 +1,8 @@
 const config = require('../config')
-const API_ENDPOINT = (airportName) =>
+const METAR_API = (airportName) =>
+//`https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&startTime=1508946600&endTime=1508953800&stationString=${airportName}&mostRecentForEachStation=true`
+`https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`
+const TAF_API = (airportName) =>
 //`https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&startTime=1508946600&endTime=1508953800&stationString=${airportName}&mostRecentForEachStation=true`
 `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`
 
@@ -13,7 +16,7 @@ exports.metarStrategy = {
     }
   },
   resolve: async (action) => {
-    const response = await global.fetch(API_ENDPOINT(action.payload.airportName))
+    const response = await global.fetch(METAR_API(action.payload.airportName))
     const result = await response.json()
     return result
   },
@@ -24,6 +27,30 @@ exports.metarStrategy = {
     return {
       type: 'text',
       text: (result[0].raw_metar).substr(0, count)+' ค่ะ'
+    }
+  }
+}
+exports.tafStrategy = {
+  test: /^taf [a-zA-Z]{4}$/,
+  action: 'airports/taf',
+  mapToPayload: (event) => {
+    const words = event.text.split(' ')
+    return {
+      airportName: words[1]
+    }
+  },
+  resolve: async (action) => {
+    const response = await global.fetch(TAF_API(action.payload.airportName))
+    const result = await response.text()
+    return result
+  },
+  messageReducer: async (error, result) => {
+    var pattern = /[A-Z]{3}.+?(?=[0-9]{4}-[0-9]{2})/
+    while ((match = pattern.exec(result)) !== null) {
+      return {
+        type: 'text',
+        text: (match[0])
+      }
     }
   }
 }
