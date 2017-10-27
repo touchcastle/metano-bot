@@ -87,9 +87,12 @@ class MessengerAdapter {
     }
     action.provider = this.__provider
     for (let strategy of this.__strategies) {
+      //console.log(strategy.action)
+      //console.log(action.type)
       if (strategy.action === action.type) {
         const result = await strategy.resolve.bind(this)(action)
         const msg = await strategy.messageReducer(undefined, result)
+        console.log(msg)
         return msg
       }
     }

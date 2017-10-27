@@ -6,6 +6,7 @@ const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 
 class LineAdapter extends MesssengerAdapter {
   constructor (strategies, config) {
+    console.log(strategies)
     super(strategies, config)
     const { channelAccessToken, channelSecret } = config
     console.log(chalk.yellow('Init LINE adapter'))
