@@ -6,6 +6,28 @@ const TAF_API = (airportName) =>
 const NOTAM_API = (airportName) =>
 `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=10`
 
+exports.howtoStrategy = {
+  test: /^howto|^Howto/,
+  action: 'airports/howto',
+  resolve: async (action) => {
+    result = 'สวัสดีค่ะ สามารถใช้งาน"เมตาโนะ"ได้ง่ายๆดังนี้ค่ะ\n\n'+
+              '1.)ดูข้อมูล METAR\nพิมพ์คำว่า metar เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ'+
+              '\n(ตัวอย่าง ข้อมูล METAR ของสนามบินดอนเมือง "metar vtbd"\n\n'+
+              '2.)ดูข้อมูล TAF\nพิมพ์คำว่า taf เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ'+
+              '\n(ตัวอย่าง ข้อมูล TAF ของสนามบินดอนเมือง "taf vtbd"\n\n'+
+              '3.)ดูข้อมูล NOTAM\nพิมพ์คำว่า notam เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ'+
+              '\n(ตัวอย่าง ข้อมูล NOTAM ของสนามบินดอนเมือง "notam vtbd"\n\n'+
+              '=========='
+    return result
+  },
+  messageReducer: async (error, result) => {
+    return {
+      type: 'text',
+      text: (result)
+    }
+  }
+}
+
 exports.metarStrategy = {
   test: /^metar [a-zA-Z]{4}$|^Metar [a-zA-Z]{4}$/,
   action: 'airports/metar',

@@ -28,7 +28,7 @@ function mapEventWithStrategies (event, strategies) {
   }
 }
 function shortcutParse (text) {
-  return text.match(/(^[a-zA-Z]{5}\s[a-zA-Z]{4}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{4}$)/)
+  return text.match(/(^[a-zA-Z]{5}\s[a-zA-Z]{4}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{4}$)|(howto)|(Howto)/)
 }
 module.exports = (strategies) => function (event) {
   console.log(event)
