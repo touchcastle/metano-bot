@@ -255,3 +255,19 @@ exports.infoStrategy = {
     }
   }
 }
+
+exports.errorStrategy = {
+  test: /^.+/,
+  action: 'airports/error',
+  resolve: async (action) => {
+    result = 'ฉันไม่เข้าใจคำถามนี้ค่ะ\n'+
+             'สามารถตรวจสอบวิธีใช้งานได้จาก "howto" ค่ะ'
+    return result
+  },
+  messageReducer: async (error, result) => {
+    return {
+      type: 'text',
+      text: (result)
+    }
+  }
+}
