@@ -200,8 +200,12 @@ exports.notamStrategy = {
       if(outArr.length<=5){
         return outArr.map(text => ({ type:'text', text}))
       }else{
-        const str = outArr.reduce((current, next) => {
-          return current + '\n' + next
+        const str = outArr.reduce((current, next, index) => {
+          if(index==0){
+            return next
+          }else{
+            return current + '\n' + next
+          }
         }, '')
         //console.log('=====', str, '=====')
         return {
