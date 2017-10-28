@@ -1,9 +1,9 @@
 require('dotenv').config({})
 const throwConfigError = (name) => { throw new Error(name) }
 const config = {
+  shortcutRegex: /(^[a-zA-Z]{5}\s[a-zA-Z]{4}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{4}$)|(^[a-zA-Z]{4}\s[a-zA-Z]{4}$)|(howto)|(Howto)/,
   port: process.env.PORT || 6969,
   botName: process.env.BOT_NAME || 'โมโมกะ',
-  mongoURL: process.env.MONGODB_URL,
   domain: process.env.DOMAIN || throwConfigError('Bot domain is undefined'),
   facebook: {
     pageToken: process.env.FACEBOOK_PAGE_TOKEN
