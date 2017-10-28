@@ -19,6 +19,8 @@ exports.howtoStrategy = {
               '\n(ตัวอย่าง ข้อมูล TAF ของสนามบินดอนเมือง "taf vtbd"\n\n'+
               '3.)ดูข้อมูล NOTAM\nพิมพ์คำว่า notam เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ'+
               '\n(ตัวอย่าง ข้อมูล NOTAM ของสนามบินดอนเมือง "notam vtbd"\n\n'+
+              '4.)ดูข้อมูลของสนามบิน\nพิมพ์คำว่า info เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ'+
+              '\n(ตัวอย่าง ข้อมูลของสนามบินดอนเมือง "info vtbd"\n\n'+
               '=========='
     return result
   },
@@ -112,13 +114,15 @@ exports.notamStrategy = {
   resolve: async (action) => {
     const response = await global.fetch(NOTAM_API(action.payload.airportName))
     const result = await response.json()
-    console.log(result)
+    //console.log(result)
     return result
   },
   messageReducer: async (error, result) => {
     var rows = result.rows.length
     var out = ""
+    var outArr = []
     for(var i=0;i<rows;i++){
+      out = ''
       //A)
       out += 'A) '+(result.rows[i].itema[0])+'\n'
       //B)
@@ -145,7 +149,7 @@ exports.notamStrategy = {
 
       //E)
       var eLength = (result.rows[i].iteme).length
-      var maxLength = 200
+      var maxLength = 1024
       if(eLength <= maxLength){
         out += 'E) '+(result.rows[i].iteme)+'\n'
       }else{
@@ -159,9 +163,14 @@ exports.notamStrategy = {
       if ((result.rows[i].itemg)!==null){
         out += 'G) '+(result.rows[i].itemg)+'\n'
       }
-
-      out += '\n'+'=========='+'\n\n'
+      //out += '\n'+'=========='+'\n\n'
+      outArr.push(out)
     }
+    outArr.push("NOTAM ทั้งหมดมีเท่านี้ค่ะ")
+    console.log("1>>>>")
+    console.log(outArr[0])
+    console.log("2>>>>")
+    console.log(outArr[1])
     return {
       type: 'text',
       text: (out)
