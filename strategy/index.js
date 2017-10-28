@@ -5,4 +5,5 @@ module.exports = [
   airport.tafStrategy,
   airport.notamStrategy,
   airport.howtoStrategy,
+  airport.infoStrategy,
 ]

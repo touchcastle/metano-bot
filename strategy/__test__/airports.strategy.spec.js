@@ -1,6 +1,8 @@
 require('isomorphic-fetch')
 const metarStrategy = require('../airports.strategy').metarStrategy
 const tafStrategy = require('../airports.strategy').tafStrategy
+const notamStrategy = require('../airports.strategy').notamStrategy
+const infoStrategy = require('../airports.strategy').infoStrategy
 
 const msg = 'metar vtbd'
 describe('Airport strategy test', () => {
@@ -67,3 +69,24 @@ describe('Airport strategy test', () => {
     console.log(responseMessage)
   })
 })
+
+const msg = 'info vtbd'
+describe('Airport strategy test', () => {
+  it('should return result from info vtbd', async () => {
+    const isMatch = infoStrategy.test.test(msg)
+    expect(isMatch).toBeTruthy()
+
+    const mapPayloadResult = await infoStrategy.mapToPayload({
+      text: msg
+    })
+    expect(mapPayloadResult.airportName).toEqual('vtbd')
+
+    const resolveResult = await infoStrategy.resolve({
+      payload: mapPayloadResult
+    })
+    expect(resolveResult).toEqual(expect.anything())
+
+    const responseMessage = await infoStrategy.messageReducer(undefined, resolveResult)
+
+    console.log(responseMessage)
+  })

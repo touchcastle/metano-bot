@@ -5,6 +5,8 @@ const TAF_API = (airportName) =>
 `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&startTime=1508947074&endTime=1508954274&stationString=${airportName}&mostRecentForEachStation=true`
 const NOTAM_API = (airportName) =>
 `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=10`
+const INFO_API = (airportName) =>
+`https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/locations/doc7910?api_key=${config.ICAO_API_KEY}&airports=${airportName}&format=json`
 
 exports.howtoStrategy = {
   test: /^howto|^Howto/,
@@ -163,6 +165,40 @@ exports.notamStrategy = {
     return {
       type: 'text',
       text: (out)
+    }
+  }
+}
+
+exports.infoStrategy = {
+  test: /^info [a-zA-Z]{4}$|^Info [a-zA-Z]{4}$/,
+  action: 'airports/info',
+  mapToPayload: (event) => {
+    const words = event.text.split(' ')
+    return {
+      airportName: words[1]
+    }
+  },
+  resolve: async (action) => {
+    const response = await global.fetch(INFO_API(action.payload.airportName))
+    const result = await response.json()
+    return result
+  },
+  messageReducer: async (error, result) => {
+    if(result[0]==null){
+      return {
+        type: 'text',
+        text: 'ไม่มีข้อมูลค่ะ'
+      }
+    }else{
+      return {
+        type: 'text',
+        text: 'Name: '+(result[0].Location_Name)+'\n'+
+              'State: '+(result[0].State_Name)+'\n'+
+              'ICAO Code: '+(result[0].ICAO_Code)+'\n'+
+              'IATA Code: '+(result[0].IATA_Code)+'\n'+
+              'Latitude: '+(result[0].Latitude)+'\n'+
+              'Longtitude: '+(result[0].Longitude)
+      }
     }
   }
 }
