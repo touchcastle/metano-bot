@@ -123,20 +123,26 @@ exports.notamStrategy = {
     var rows = result.rows.length
     var out = ""
     var outArr = []
-    outArr.push("เมตาโนะพบข้อมูล NOTAM ดังนี้ค่ะ")
+    out = "เมตาโนะพบข้อมูล NOTAM ทั้งหมด "+rows+" รายการ ดังนี้ค่ะ"
+    outArr.push(out)
     for(var i=0;i<rows;i++){
-      out = ''
+      out = (i+1)+'].\n'
       if(result.rows[i].lower=='0'){
         result.rows[i].lower = '000'
       }
-      out += result.rows[i].series+result.rows[i].number+'/'+result.rows[i].year+' '+'NOTAM'+'\n'
+      out += result.rows[i].series+result.rows[i].number+'/'+result.rows[i].year+' '+'NOTAM'+result.rows[i].type
+      if(result.rows[i].type=='R'|result.rows[i].type=='C'){
+        out += ' '+result.rows[i].referredseries+result.rows[i].referrednumber+'/'+result.rows[i].referredyear
+      }
+      out += '\n'
       out += 'Q) '+result.rows[i].fir+'/'+result.rows[i].code23+result.rows[i].code45+'/'+result.rows[i].traffic+
              '/'+result.rows[i].purpose+'/'+result.rows[i].scope+'/'+result.rows[i].lower+'/'+result.rows[i].upper+'\n'
       //A)
       out += 'A) '+(result.rows[i].itema[0])+'\n'
+
+      var months = ['01','02','03','04','05','06','07','09','09','10','11','12'];
       //B)
       var a = new Date(result.rows[i].startvalidity * 1000);
-      var months = ['01','02','03','04','05','06','07','09','09','10','11','12'];
       var year = a.getFullYear();
       var month = months[a.getMonth()];
       var date = ((a.getDate())>=10)? (a.getDate()) : '0' + (a.getDate());
@@ -147,7 +153,6 @@ exports.notamStrategy = {
 
       //C)
       var a = new Date(result.rows[i].endvalidity * 1000);
-      var months = ['01','02','03','04','05','06','07','09','09','10','11','12'];
       var year = a.getFullYear();
       var month = months[a.getMonth()];
       var date = ((a.getDate())>=10)? (a.getDate()) : '0' + (a.getDate());
@@ -175,11 +180,17 @@ exports.notamStrategy = {
       //out += '\n'+'=========='+'\n\n'
       outArr.push(out)
     }
-    outArr.push("NOTAM ทั้งหมดมีเท่านี้ค่ะ")
+    outArr.push("จบรายงาน NOTAM ค่ะ")
     console.log("1>>>>")
     console.log(outArr[0])
     console.log("2>>>>")
     console.log(outArr[1])
+    console.log("3>>>>")
+    console.log(outArr[2])
+    console.log("4>>>>")
+    console.log(outArr[3])
+    console.log("5>>>>")
+    console.log(outArr[4])
     return {
       type: 'text',
       text: (out)
