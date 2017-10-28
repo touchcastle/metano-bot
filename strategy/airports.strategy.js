@@ -51,7 +51,7 @@ exports.metarStrategy = {
     if(result[0]==null){
       return {
         type: 'text',
-        text: 'ไม่มีข้อมูลค่ะ'
+        text: 'เมตาโนะหาข้อมูล METAR ไม่พบค่ะ'
       }
     }else{
       var len = result[0].raw_metar.length
@@ -96,7 +96,7 @@ exports.tafStrategy = {
     }else{
       return {
         type: 'text',
-        text: 'ไม่มีข้อมูลค่ะ'
+        text: 'เมตาโนะหาข้อมูล TAF ไม่พบค่ะ'
       }
     }
   }
@@ -118,11 +118,20 @@ exports.notamStrategy = {
     return result
   },
   messageReducer: async (error, result) => {
+    console.log(result.total)
+    if(result.total!==0){
     var rows = result.rows.length
     var out = ""
     var outArr = []
+    outArr.push("เมตาโนะพบข้อมูล NOTAM ดังนี้ค่ะ")
     for(var i=0;i<rows;i++){
       out = ''
+      if(result.rows[i].lower=='0'){
+        result.rows[i].lower = '000'
+      }
+      out += result.rows[i].series+result.rows[i].number+'/'+result.rows[i].year+' '+'NOTAM'+'\n'
+      out += 'Q) '+result.rows[i].fir+'/'+result.rows[i].code23+result.rows[i].code45+'/'+result.rows[i].traffic+
+             '/'+result.rows[i].purpose+'/'+result.rows[i].scope+'/'+result.rows[i].lower+'/'+result.rows[i].upper+'\n'
       //A)
       out += 'A) '+(result.rows[i].itema[0])+'\n'
       //B)
@@ -175,6 +184,12 @@ exports.notamStrategy = {
       type: 'text',
       text: (out)
     }
+  }else{
+    return {
+      type: 'text',
+      text: 'เมตาโนะหาข้อมูล NOTAM ไม่พบค่ะ'
+    }
+  }
   }
 }
 
