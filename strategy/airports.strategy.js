@@ -2,7 +2,7 @@ const config = require('../config')
 const METAR_API = (airportName) =>
   `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`
 const TAF_API = (airportName) =>
-  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString=${airportName}&hoursBeforeNow=0&mostRecentForEachStation=constraint`
+  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&stationString=${airportName}&hoursBeforeNow=0&mostRecentForEachStation=constraint`
 const NOTAM_API = (airportName) =>
   `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=10`
 const INFO_API = (airportName) =>
@@ -138,13 +138,15 @@ exports.notamStrategy = {
         if (result.rows[i].lower == '0') {
           result.rows[i].lower = '000'
         }
-        out += result.rows[i].series + result.rows[i].number + '/' + result.rows[i].year + ' ' + 'NOTAM' + result.rows[i].type
-        if (result.rows[i].type == 'R' | result.rows[i].type == 'C') {
-          out += ' ' + result.rows[i].referredseries + result.rows[i].referrednumber + '/' + result.rows[i].referredyear
+        if(rows<=5){
+          out += result.rows[i].series + result.rows[i].number + '/' + result.rows[i].year + ' ' + 'NOTAM' + result.rows[i].type
+          if (result.rows[i].type == 'R' | result.rows[i].type == 'C') {
+            out += ' ' + result.rows[i].referredseries + result.rows[i].referrednumber + '/' + result.rows[i].referredyear
+          }
+          out += '\n'
+          out += 'Q) ' + result.rows[i].fir + '/' + result.rows[i].code23 + result.rows[i].code45 + '/' + result.rows[i].traffic +
+            '/' + result.rows[i].purpose + '/' + result.rows[i].scope + '/' + result.rows[i].lower + '/' + result.rows[i].upper + '\n'
         }
-        out += '\n'
-        out += 'Q) ' + result.rows[i].fir + '/' + result.rows[i].code23 + result.rows[i].code45 + '/' + result.rows[i].traffic +
-          '/' + result.rows[i].purpose + '/' + result.rows[i].scope + '/' + result.rows[i].lower + '/' + result.rows[i].upper + '\n'
         //A)
         out += 'A) ' + (result.rows[i].itema[0]) + '\n'
 
@@ -175,7 +177,7 @@ exports.notamStrategy = {
         if(rows<=5){
           maxLength = '999'
         }else{
-          maxLength = '190'
+          maxLength = '150'
         }
         if (eLength <= maxLength) {
           out += 'E) ' + (result.rows[i].iteme) + '\n'
