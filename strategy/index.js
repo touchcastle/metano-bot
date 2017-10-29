@@ -6,5 +6,6 @@ module.exports = [
   airport.notamStrategy,
   airport.howtoStrategy,
   airport.infoStrategy,
+  airport.weatherStrategy,
   airport.errorStrategy,
 ]

@@ -258,6 +258,25 @@ exports.infoStrategy = {
   }
 }
 
+exports.weatherStrategy = {
+  test: /อากาศ/,
+  action: 'airports/weather',
+  resolve: async (action) => {
+    result = 'สามารถตรวจสอบข้อมูลอากาศทั้ง METAR และ TAF ได้เลยค่ะ\n\n'+
+            'ดูข้อมูล METAR\nพิมพ์คำว่า metar เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
+            '\n(ตัวอย่าง ข้อมูล METAR ของสนามบินดอนเมือง "metar vtbd"\n\n' +
+            'ดูข้อมูล TAF\nพิมพ์คำว่า taf เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
+            '\n(ตัวอย่าง ข้อมูล TAF ของสนามบินดอนเมือง "taf vtbd"\n\n'
+    return result
+  },
+  messageReducer: async (error, result) => {
+    return {
+      type: 'text',
+      text: (result)
+    }
+  }
+}
+
 exports.errorStrategy = {
   test: /^.+/,
   action: 'airports/error',
