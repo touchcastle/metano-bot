@@ -2,7 +2,7 @@ const config = require('../config')
 const METAR_API = (airportName) =>
   `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`
 const TAF_API = (airportName) =>
-  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&startTime=1508947074&endTime=1508954274&stationString=${airportName}&mostRecentForEachStation=true`
+  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=xml&stationString=${airportName}&hoursBeforeNow=0&mostRecentForEachStation=constraint`
 const NOTAM_API = (airportName) =>
   `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=10`
 const INFO_API = (airportName) =>
