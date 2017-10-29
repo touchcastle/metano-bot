@@ -266,7 +266,8 @@ exports.weatherStrategy = {
             'ดูข้อมูล METAR\nพิมพ์คำว่า metar เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
             '\n(ตัวอย่าง ข้อมูล METAR ของสนามบินดอนเมือง "metar vtbd")\n\n' +
             'ดูข้อมูล TAF\nพิมพ์คำว่า taf เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
-            '\n(ตัวอย่าง ข้อมูล TAF ของสนามบินดอนเมือง "taf vtbd")\n\n'
+            '\n(ตัวอย่าง ข้อมูล TAF ของสนามบินดอนเมือง "taf vtbd")\n\n' +
+            '=========='
     return result
   },
   messageReducer: async (error, result) => {
