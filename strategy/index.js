@@ -1,12 +1,15 @@
 const airport = require('./airports.strategy')
+const chart = require('./chart.strategy')
+const aloft = require('./aloft.strategy')
+const text = require('./text.strategy')
 
 module.exports = [
   airport.metarStrategy,
   airport.tafStrategy,
   airport.notamStrategy,
-  airport.howtoStrategy,
+  text.howtoStrategy,
   airport.infoStrategy,
-  airport.chartStrategy,
-  airport.aloftStrategy,
-  airport.errorStrategy,
+  chart.chartStrategy,
+  aloft.aloftStrategy,
+  text.errorStrategy,
 ]

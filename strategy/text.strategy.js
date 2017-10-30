@@ -1,0 +1,43 @@
+const config = require('../config')
+
+exports.howtoStrategy = {
+  test: /^howto|^Howto/,
+  action: 'airports/howto',
+  resolve: async (action) => {
+    result = 'สวัสดีค่ะ สามารถใช้งาน"เมตาโนะ"ได้ง่ายๆดังนี้ค่ะ\n\n' +
+      '1.)ดูข้อมูล METAR\nพิมพ์คำว่า metar เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
+      '\n(ตัวอย่าง: ข้อมูล METAR ของสนามบินดอนเมือง "metar vtbd")\n\n' +
+      '2.)ดูข้อมูล TAF\nพิมพ์คำว่า taf เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
+      '\n(ตัวอย่าง: ข้อมูล TAF ของสนามบินดอนเมือง "taf vtbd")\n\n' +
+      '3.)ดูข้อมูล NOTAM\nพิมพ์คำว่า notam เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
+      '\n(ตัวอย่าง: ข้อมูล NOTAM ของสนามบินดอนเมือง "notam vtbd")\n\n' +
+      '4.)ดูภาพ Thailand Weather Chart\nพิมพ์คำว่า chart ได้เลยค่ะ\n\n' +
+      '5.)ดูภาพ Thailand Wind Aloft(5000ft)\nพิมพ์คำว่า aloft ได้เลยค่ะ\n\n'+
+      '6.)ดูข้อมูลของสนามบิน\nพิมพ์คำว่า info เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
+      '\n(ตัวอย่าง: ข้อมูลของสนามบินดอนเมือง "info vtbd")\n\n' +
+      '=========='
+    return result
+  },
+  messageReducer: async (error, result) => {
+    return {
+      type: 'text',
+      text: (result)
+    }
+  }
+}
+
+exports.errorStrategy = {
+  test: /^.+/,
+  action: 'airports/error',
+  resolve: async (action) => {
+    result = 'ฉันไม่เข้าใจคำถามนี้ค่ะ\n'+
+             'สามารถตรวจสอบวิธีใช้งานได้จาก "howto" ค่ะ'
+    return result
+  },
+  messageReducer: async (error, result) => {
+    return {
+      type: 'text',
+      text: (result)
+    }
+  }
+}
