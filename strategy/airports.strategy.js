@@ -394,7 +394,7 @@ exports.aloftStrategy = {
     }
 
     aloftDate = yyyy+'-'+mm+'-'+dd;
-    console.log(aloftDate)
+    console.log(time)
     result = ALOFT_API(aloftDate)
     result = result.replace('$time$', time)
     console.log(result)
