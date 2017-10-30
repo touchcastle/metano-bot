@@ -1,8 +1,10 @@
 const config = require('../config')
+/*const METAR_API = (airportName) =>
+  `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`*/
 const METAR_API = (airportName) =>
-  `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/weather/current-conditions-list?airports=${airportName}&api_key=${config.ICAO_API_KEY}&format=json`
+  `https://aviationweather.gov/adds/dataserver_current/httpparam?datasource=metars&requestType=retrieve&format=csv&mostRecentForEachStation=constraint&hoursBeforeNow=3&stationString=${airportName}`
 const TAF_API = (airportName) =>
-  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&stationString=${airportName}&hoursBeforeNow=0&mostRecentForEachStation=constraint`
+  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&stationString=${airportName}&hoursBeforeNow=3&mostRecentForEachStation=constraint`
 const NOTAM_API = (airportName) =>
   `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=10`
 const INFO_API = (airportName) =>
@@ -49,22 +51,28 @@ exports.metarStrategy = {
   },
   resolve: async (action) => {
     const response = await global.fetch(METAR_API(action.payload.airportName))
-    const result = await response.json()
+    const result = await response.text()
+    console.log(result)
     return result
   },
   messageReducer: async (error, result) => {
-    console.log(result[0])
-    if (result[0] == null) {
+    if (result.indexOf('0 results') <= 0) {
+      var pattern = /[A-Z]{4}.+?(?=,)/
+      while ((match = pattern.exec(result)) !== null) {
+        var splitedTaf = match[0].split(/(?=BECMG)|(?=TEMPO)|(?=FM)/g)
+        var out = ""
+        for (var i = 0; i < splitedTaf.length; i++) {
+          out += splitedTaf[i] + '\n'
+        }
+        return {
+          type: 'text',
+          text: (out)
+        }
+      }
+    } else {
       return {
         type: 'text',
         text: 'เมตาโนะหาข้อมูล METAR ไม่พบค่ะ'
-      }
-    } else {
-      var len = result[0].raw_metar.length
-      var count = len - 9
-      return {
-        type: 'text',
-        text: (result[0].raw_metar).substr(0, count) + ' ค่ะ'
       }
     }
   }
@@ -309,7 +317,7 @@ exports.chartStrategy = {
       if((hh>=19)&&(min>10)){
         time = 19
       }else{
-        time = 07
+        time = '07'
       }
     }
 
@@ -381,7 +389,7 @@ exports.aloftStrategy = {
       if((hh>=19)&&(min>10)){
         time = 19
       }else{
-        time = 07
+        time = '07'
       }
     }
 
