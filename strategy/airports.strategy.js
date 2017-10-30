@@ -106,18 +106,26 @@ exports.notamStrategy = {
       var rows = result.rows.length
       var out = ""
       var outArr = []
+
+      var maxLength
+      if(rows<=5){
+        maxLength = '1900'
+      }else{
+        maxLength = (2000/rows)-55
+      }
+
       for (var i = 0; i < rows; i++) {
         out = ''
         if(i==0){
-          out += "เมตาโนะพบข้อมูล NOTAM ทั้งหมด "+rows+" รายการ ดังนี้ค่ะ\n"
+          out += "พบ NOTAM "+rows+" รายการ\n"
           console.log(rows)
           if(rows>=6){
-            out += "**ข้อมูลบางส่วนถูกตัดออกเนื่องจากมีความยาวเกินกำหนด กรุณาตรวจสอบจากแหล่งอื่นเพิ่มเติมด้วยนะคะ\n\n"
+            out += "**ข้อมูลบางส่วนถูกตัดออกเนื่องจากมีความยาวเกินกำหนด กรุณาตรวจสอบจากแหล่งอื่นเพิ่มเติม\n\n"
           }else{
             out += '\n'
           }
         }
-        out += (i + 1) + '].\n'
+        out += (i + 1) + '.\n'
         if (result.rows[i].lower == '0') {
           result.rows[i].lower = '000'
         }
@@ -156,12 +164,6 @@ exports.notamStrategy = {
 
         //E)
         var eLength = (result.rows[i].iteme).length
-        var maxLength
-        if(rows<=5){
-          maxLength = '999'
-        }else{
-          maxLength = '150'
-        }
         if (eLength <= maxLength) {
           out += 'E) ' + (result.rows[i].iteme) + '\n'
         } else {
@@ -177,7 +179,7 @@ exports.notamStrategy = {
         }
         //out += '\n'+'=========='+'\n\n'
         if(i==rows-1){
-          out += "\n==== จบรายงาน NOTAM ค่ะ ===="
+          out += "\n========"
         }
         outArr.push(out)
       }

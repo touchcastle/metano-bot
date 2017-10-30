@@ -44,7 +44,7 @@ exports.aloftStrategy = {
       }
       time = 19
     }else{
-      if((hh>=19)&&(min>10)){
+      if((hh>19) || ((hh==19)&&(min>10))){
         time = 19
       }else{
         time = '07'
