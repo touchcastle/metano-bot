@@ -9,6 +9,7 @@ const INFO_API = (airportName) =>
   `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/locations/doc7910?api_key=${config.ICAO_API_KEY}&airports=${airportName}&format=json`
 
   var code = ''
+  var foundCode = ''
 
 exports.metarStrategy = {
   test: /^metar [a-zA-Z]{4}$|^Metar [a-zA-Z]{4}$/,
@@ -119,11 +120,13 @@ exports.notamStrategy = {
 
       for (var i = 0; i < rows; i++) {
         out = ''
-
+        foundCode = ''
         if(code!=''){
           var notamNO = result.rows[i].series + result.rows[i].number
           if(notamNO!=code){
             continue
+          }else{
+            foundCode = true
           }
         }
 
@@ -200,21 +203,28 @@ exports.notamStrategy = {
         }
         outArr.push(out)
       }
-      //outArr.push("จบรายงาน NOTAM ค่ะ")
-      if(outArr.length<=5){
-        return outArr.map(text => ({ type:'text', text}))
-      }else{
-        const str = outArr.reduce((current, next, index) => {
-          if(index==0){
-            return next
-          }else{
-            return current + '\n' + next
+
+      if(code==''|(code!=''&foundCode==true)){
+        if(outArr.length<=5){
+          return outArr.map(text => ({ type:'text', text}))
+        }else{
+          const str = outArr.reduce((current, next, index) => {
+            if(index==0){
+              return next
+            }else{
+              return current + '\n' + next
+            }
+          }, '')
+          //console.log('=====', str, '=====')
+          return {
+            type: 'text',
+            text: str
           }
-        }, '')
-        //console.log('=====', str, '=====')
+        }
+      }else if(code!=''&foundCode==false){
         return {
           type: 'text',
-          text: str
+          text: 'เมตาโนะหาข้อมูล NOTAM ไม่พบค่ะ'
         }
       }
     } else {
