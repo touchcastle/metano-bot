@@ -22,14 +22,16 @@ exports.radarStrategy = {
       var result = METAR_API(action.payload.station)
       if(action.payload.station=='cmp'){
         var fileType = 'jpg'
+      }else if(action.payload.station=='sat'){
+        var fileType = 'png'
       }else{
         var fileType = 'gif'
       }
       var result = result.replace('$fileType$', fileType)
     }else if(noStation=='X'){
       result = 'ดูภาพ Weather Radar พิมพ์คำว่า radar เว้นวรรคแล้วตามด้วยชื่อสถานีค่ะ\n\n' +
-      'รายชื่อสถานี:\n[svp-สุวรรณภูมิ]\n[lmp-ลำพูน]\n[kkn-ขอนแก่น]\n[ubn-อุบลฯ]\n[cmp-ชุมพร]\n\n' +
-      'ตัวอย่าง: Weather Radar สุวรรณภูมิ "radar svp"\n\n'
+      'รายชื่อสถานี:\n[sat-สัตหีบ]\n[svp-สุวรรณภูมิ]\n[lmp-ลำพูน]\n[kkn-ขอนแก่น]\n[ubn-อุบลฯ]\n[cmp-ชุมพร]\n[hhn-หัวหิน]\n\n' +
+      'ตัวอย่าง: Weather Radar สัตหีบ "radar sat"\n\n'
     }
     return result
   },
