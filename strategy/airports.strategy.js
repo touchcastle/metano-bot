@@ -8,6 +8,7 @@ const NOTAM_API = (airportName) =>
 const INFO_API = (airportName) =>
   `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/locations/doc7910?api_key=${config.ICAO_API_KEY}&airports=${airportName}&format=json`
 
+  var code = ''
 
 exports.metarStrategy = {
   test: /^metar [a-zA-Z]{4}$|^Metar [a-zA-Z]{4}$/,
@@ -21,7 +22,6 @@ exports.metarStrategy = {
   resolve: async (action) => {
     const response = await global.fetch(METAR_API(action.payload.airportName))
     const result = await response.text()
-    console.log(result)
     return result
   },
   messageReducer: async (error, result) => {
@@ -86,10 +86,14 @@ exports.tafStrategy = {
 }
 
 exports.notamStrategy = {
-  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$/,
+  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}/,
   action: 'airports/notam',
   mapToPayload: (event) => {
     const words = event.text.split(' ')
+    code = ''
+    if(words[2]!=null){
+      code = words[2].toUpperCase()
+    }
     return {
       airportName: words[1].toUpperCase()
     }
@@ -97,11 +101,10 @@ exports.notamStrategy = {
   resolve: async (action) => {
     const response = await global.fetch(NOTAM_API(action.payload.airportName))
     const result = await response.json()
-    //console.log(result)
     return result
+
   },
   messageReducer: async (error, result) => {
-    console.log(result.total)
     if (result.total !== 0) {
       var rows = result.rows.length
       var out = ""
@@ -111,25 +114,36 @@ exports.notamStrategy = {
       if(rows<=5){
         maxLength = '1900'
       }else{
-        maxLength = (2000/rows)-55
+        maxLength = (2000/rows)-70
       }
 
       for (var i = 0; i < rows; i++) {
         out = ''
-        if(i==0){
-          out += "พบ NOTAM "+rows+" รายการ\n"
-          console.log(rows)
-          if(rows>=6){
-            out += "**ข้อมูลบางส่วนถูกตัดออกเนื่องจากมีความยาวเกินกำหนด กรุณาตรวจสอบจากแหล่งอื่นเพิ่มเติม\n\n"
-          }else{
-            out += '\n'
+
+        if(code!=''){
+          var notamNO = result.rows[i].series + result.rows[i].number
+          if(notamNO!=code){
+            continue
           }
         }
-        out += (i + 1) + '.\n'
+
+        if(code==''){  //only in normal report, not in specific notam report
+          if(i==0){
+            out += "พบ NOTAM "+rows+" รายการ\n"
+            if(rows>=6){
+              out += "\n** ข้อมูลบางส่วนถูกตัดออกเนื่องจากมีความยาวเกินกำหนด สามารถระบุ series และ number ต่อท้ายเพื่ออ่านทั้งหมดได้ค่ะ\n"+
+                     "(ตัวอย่าง: notam vtbd C2525)\n\n"
+            }else{
+              out += '\n'
+            }
+          }
+          out += (i + 1) + ')\n'
+        }
+
         if (result.rows[i].lower == '0') {
           result.rows[i].lower = '000'
         }
-        if(rows<=5){
+        if((rows<=5)|code!=''){
           out += result.rows[i].series + result.rows[i].number + '/' + result.rows[i].year + ' ' + 'NOTAM' + result.rows[i].type
           if (result.rows[i].type == 'R' | result.rows[i].type == 'C') {
             out += ' ' + result.rows[i].referredseries + result.rows[i].referrednumber + '/' + result.rows[i].referredyear
@@ -137,6 +151,9 @@ exports.notamStrategy = {
           out += '\n'
           out += 'Q) ' + result.rows[i].fir + '/' + result.rows[i].code23 + result.rows[i].code45 + '/' + result.rows[i].traffic +
             '/' + result.rows[i].purpose + '/' + result.rows[i].scope + '/' + result.rows[i].lower + '/' + result.rows[i].upper + '\n'
+        }else{
+          out += result.rows[i].series + result.rows[i].number + '/' + result.rows[i].year
+          out += '\n'
         }
         //A)
         out += 'A) ' + (result.rows[i].itema[0]) + '\n'
@@ -164,7 +181,7 @@ exports.notamStrategy = {
 
         //E)
         var eLength = (result.rows[i].iteme).length
-        if (eLength <= maxLength) {
+        if ((eLength <= maxLength)|code!='') {
           out += 'E) ' + (result.rows[i].iteme) + '\n'
         } else {
           out += 'E) ' + (result.rows[i].iteme).substr(0, maxLength - 3) + '...' + '\n'
@@ -179,7 +196,7 @@ exports.notamStrategy = {
         }
         //out += '\n'+'=========='+'\n\n'
         if(i==rows-1){
-          out += "\n========"
+          out += "========"
         }
         outArr.push(out)
       }
