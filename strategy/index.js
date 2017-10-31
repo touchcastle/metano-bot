@@ -1,6 +1,7 @@
 const airport = require('./airports.strategy')
 const chart = require('./chart.strategy')
 const aloft = require('./aloft.strategy')
+const radar = require('./radar.strategy')
 const text = require('./text.strategy')
 
 module.exports = [
@@ -11,5 +12,6 @@ module.exports = [
   airport.infoStrategy,
   chart.chartStrategy,
   aloft.aloftStrategy,
+  radar.radarStrategy,
   text.errorStrategy,
 ]
