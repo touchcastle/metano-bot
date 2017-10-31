@@ -92,6 +92,7 @@ exports.notamStrategy = {
   mapToPayload: (event) => {
     const words = event.text.split(' ')
     code = ''
+    foundCode = ''
     if(words[2]!=null){
       code = words[2].toUpperCase()
     }
@@ -120,13 +121,15 @@ exports.notamStrategy = {
 
       for (var i = 0; i < rows; i++) {
         out = ''
-        foundCode = ''
         if(code!=''){
           var notamNO = result.rows[i].series + result.rows[i].number
+          console.log(notamNO)
+          console.log('code: '+code)
           if(notamNO!=code){
             continue
+            console.log('1')
           }else{
-            foundCode = true
+            foundCode = 'X'
           }
         }
 
@@ -203,8 +206,8 @@ exports.notamStrategy = {
         }
         outArr.push(out)
       }
-
-      if(code==''|(code!=''&foundCode==true)){
+      console.log('>>>><><><><>'+code+foundCode)
+      if(code==''|((code!='')&&(foundCode=='X'))){
         if(outArr.length<=5){
           return outArr.map(text => ({ type:'text', text}))
         }else{
@@ -221,7 +224,7 @@ exports.notamStrategy = {
             text: str
           }
         }
-      }else if(code!=''&foundCode==false){
+      }else if(code!=''&foundCode==''){
         return {
           type: 'text',
           text: 'เมตาโนะหาข้อมูล NOTAM ไม่พบค่ะ'
