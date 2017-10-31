@@ -18,10 +18,10 @@ exports.aloftStrategy = {
     var dd = chartDate.getDate()
     var mm = chartDate.getMonth()+1 //January is 0!
     var yyyy = chartDate.getFullYear()
-    var hh = chartDate.getHours()
+    var hh = chartDate.getUTCHours()+7  //GMT+7
     var min = chartDate.getMinutes()
     var time
-    if((hh<7) || (hh==7 && min<=10)){ //between 0000hrs - 0710hrs 
+    if((hh<3)){ //between 0000hrs - 0710hrs 
       dd = dd-1
       console.log(dd)
       if(dd==0){
@@ -44,10 +44,14 @@ exports.aloftStrategy = {
       }
       time = 19
     }else{
-      if((hh>19) || ((hh==19)&&(min>10))){
-        time = 19
-      }else{
+      if(hh>21){
+        time = '19'
+      }else if(hh>15){
+        time = '13'
+      }else if(hh>9){
         time = '07'
+      }else{
+        time = '01'
       }
     }
 
