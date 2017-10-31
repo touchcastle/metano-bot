@@ -21,7 +21,7 @@ exports.aloftStrategy = {
     var hh = chartDate.getUTCHours()+7  //GMT+7
     var min = chartDate.getMinutes()
     var time
-    if((hh<3)){ //between 0000hrs - 0710hrs 
+    if((hh<4)){ //between 0000hrs - 0710hrs 
       dd = dd-1
       console.log(dd)
       if(dd==0){
@@ -44,11 +44,11 @@ exports.aloftStrategy = {
       }
       time = 19
     }else{
-      if(hh>21){
+      if(hh>22){
         time = '19'
-      }else if(hh>15){
+      }else if(hh>16){
         time = '13'
-      }else if(hh>9){
+      }else if(hh>10){
         time = '07'
       }else{
         time = '01'

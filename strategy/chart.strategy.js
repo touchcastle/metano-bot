@@ -24,7 +24,7 @@ exports.chartStrategy = {
     console.log(hh)
 
     var time
-    if((hh<3)){
+    if((hh<4)){
       dd = dd-1
       console.log(dd)
       if(dd==0){
@@ -47,11 +47,11 @@ exports.chartStrategy = {
       }
       time = 19
     }else{
-      if(hh>21){
+      if(hh>22){
         time = '19'
-      }else if(hh>15){
+      }else if(hh>16){
         time = '13'
-      }else if(hh>9){
+      }else if(hh>10){
         time = '07'
       }else{
         time = '01'
