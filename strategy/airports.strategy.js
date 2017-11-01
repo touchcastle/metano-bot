@@ -10,6 +10,10 @@ const INFO_API = (airportName) =>
 
   var code = ''
   var foundCode = ''
+  var box = 1
+  var maxInBox = 1
+  var tooMuch = ''
+  var cutText = ''
 
 exports.metarStrategy = {
   test: /^metar [a-zA-Z]{4}$|^Metar [a-zA-Z]{4}$/,
@@ -87,12 +91,16 @@ exports.tafStrategy = {
 }
 
 exports.notamStrategy = {
-  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}/,
+  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}/,
   action: 'airports/notam',
   mapToPayload: (event) => {
     const words = event.text.split(' ')
     code = ''
     foundCode = ''
+    tooMuch = ''
+    box = 1
+    maxInBox = 1
+    cutText = ''
     if(words[2]!=null){
       code = words[2].toUpperCase()
     }
@@ -109,18 +117,27 @@ exports.notamStrategy = {
   messageReducer: async (error, result) => {
     if (result.total !== 0) {
       var rows = result.rows.length
-      var out = ""
+      var out = ''
       var outArr = []
 
-      var maxLength
+      var maxLengthE
       if(rows<=5){
-        maxLength = '1900'
+        box = rows
+        maxInBox = 1
+      }else if(rows<=15){
+        box = Math.ceil(rows/3)
+        maxInBox = 3
+      }else if(rows<=25){
+        box = Math.ceil(rows/5)
+        maxInBox = 5
       }else{
-        maxLength = (2000/rows)-70
+        tooMuch = 'X'
       }
+      maxLengthE = (2000/maxInBox)-250
 
+      var index = 0
       for (var i = 0; i < rows; i++) {
-        out = ''
+
         if(code!=''){
           var notamNO = result.rows[i].series + result.rows[i].number
           console.log(notamNO)
@@ -132,16 +149,18 @@ exports.notamStrategy = {
             foundCode = 'X'
           }
         }
+        
+        index++
+        if((index>maxInBox)&(i!=0)){
+          outArr.push(out)
+          index = 1
+          out = ''
+        }
 
         if(code==''){  //only in normal report, not in specific notam report
           if(i==0){
             out += "พบ NOTAM "+rows+" รายการ\n"
-            if(rows>=6){
-              out += "\n** ข้อมูลบางส่วนถูกตัดออกเนื่องจากมีความยาวเกินกำหนด สามารถระบุ series และ number ต่อท้ายเพื่ออ่านทั้งหมดได้ค่ะ\n"+
-                     "(ตัวอย่าง: notam vtbd C2525)\n\n"
-            }else{
-              out += '\n'
-            }
+            out += '$CUTTEXT$'
           }
           out += (i + 1) + ')\n'
         }
@@ -149,18 +168,13 @@ exports.notamStrategy = {
         if (result.rows[i].lower == '0') {
           result.rows[i].lower = '000'
         }
-        if((rows<=5)|code!=''){
-          out += result.rows[i].series + result.rows[i].number + '/' + result.rows[i].year + ' ' + 'NOTAM' + result.rows[i].type
-          if (result.rows[i].type == 'R' | result.rows[i].type == 'C') {
-            out += ' ' + result.rows[i].referredseries + result.rows[i].referrednumber + '/' + result.rows[i].referredyear
-          }
-          out += '\n'
-          out += 'Q) ' + result.rows[i].fir + '/' + result.rows[i].code23 + result.rows[i].code45 + '/' + result.rows[i].traffic +
-            '/' + result.rows[i].purpose + '/' + result.rows[i].scope + '/' + result.rows[i].lower + '/' + result.rows[i].upper + '\n'
-        }else{
-          out += result.rows[i].series + result.rows[i].number + '/' + result.rows[i].year
-          out += '\n'
+        out += result.rows[i].series + result.rows[i].number + '/' + result.rows[i].year + ' ' + 'NOTAM' + result.rows[i].type
+        if (result.rows[i].type == 'R' | result.rows[i].type == 'C') {
+          out += ' ' + result.rows[i].referredseries + result.rows[i].referrednumber + '/' + result.rows[i].referredyear
         }
+        out += '\n'
+        out += 'Q) ' + result.rows[i].fir + '/' + result.rows[i].code23 + result.rows[i].code45 + '/' + result.rows[i].traffic +
+                '/' + result.rows[i].purpose + '/' + result.rows[i].scope + '/' + result.rows[i].lower + '/' + result.rows[i].upper + '\n'
         //A)
         out += 'A) ' + (result.rows[i].itema[0]) + '\n'
 
@@ -187,10 +201,12 @@ exports.notamStrategy = {
 
         //E)
         var eLength = (result.rows[i].iteme).length
-        if ((eLength <= maxLength)|code!='') {
+        //if ((eLength <= maxLengthE)|code!='') {
+        if (eLength <= maxLengthE) {
           out += 'E) ' + (result.rows[i].iteme) + '\n'
-        } else {
-          out += 'E) ' + (result.rows[i].iteme).substr(0, maxLength - 3) + '...' + '\n'
+        } else { 
+          cutText = 'X'
+          out += 'E) ' + (result.rows[i].iteme).substr(0, maxLengthE - 3) + '...' + '\n'
         }
         //F)
         if ((result.rows[i].itemf) !== null) {
@@ -202,15 +218,37 @@ exports.notamStrategy = {
         }
         //out += '\n'+'=========='+'\n\n'
         if(i==rows-1){
-          out += "========"
-        }
-        outArr.push(out)
-      }
-      console.log('>>>><><><><>'+code+foundCode)
-      if(code==''|((code!='')&&(foundCode=='X'))){
-        if(outArr.length<=5){
-          return outArr.map(text => ({ type:'text', text}))
+          out += "\n==== จบรายงาน NOTAM ค่ะ ===="
         }else{
+          out += '\n'
+        }
+      }
+      if(out!==''){
+        outArr.push(out)
+        out = ''
+      }
+      console.log('cut: '+cutText)
+      console.log('cut: '+outArr[0])
+      if(cutText=='X'){
+        outArr[0] = outArr[0].replace('\n$CUTTEXT$', "** ข้อมูลบางส่วนได้ถูกตัดออกเนื่องจากมีความยาวเกินกำหนด สามารถระบุ series และ number ต่อท้ายเพื่ออ่านทั้งหมดได้ค่ะ\n"+
+        "(ตัวอย่าง: notam vtbd C1234)\n\n")
+        console.log('cut: '+outArr[0])
+      }else{
+        outArr[0] = outArr[0].replace('$CUTTEXT$', '\n')
+      }
+      /*var outArrTemp = []
+      for (var i = 0; i < rows; i++) {
+
+      }*/
+      if(tooMuch=='X'){
+        return {
+          type: 'text',
+          text: 'ข้อมูล NOTAM มีจำนวนมากเกินกำหนด(มากกว่า 25 รายการ) กรุณาตรวจสอบจากแหล่งอื่นค่ะ'
+        }
+      }else if(code==''|((code!='')&&(foundCode=='X'))){
+        //if(outArr.length<=5){
+          return outArr.map(text => ({ type:'text', text}))
+        /*}else{
           const str = outArr.reduce((current, next, index) => {
             if(index==0){
               return next
@@ -223,7 +261,7 @@ exports.notamStrategy = {
             type: 'text',
             text: str
           }
-        }
+        }*/
       }else if(code!=''&foundCode==''){
         return {
           type: 'text',
