@@ -198,7 +198,10 @@ exports.notamStrategy = {
         var min = ((a.getMinutes()) >= 10) ? (a.getMinutes()) : '0' + (a.getMinutes());
         var time = date + '-' + month + '-' + year + ' ' + hour + ':' + min;
         out += 'C) ' + time + '\n'
-
+        //D)
+        if ((result.rows[i].itemd) !== null) {
+          out += 'D) ' + (result.rows[i].itemd) + '\n'
+        }
         //E)
         var eLength = (result.rows[i].iteme).length
         //if ((eLength <= maxLengthE)|code!='') {
