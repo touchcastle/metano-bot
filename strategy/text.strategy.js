@@ -1,7 +1,7 @@
 const config = require('../config')
 
 exports.howtoStrategy = {
-  test: /^howto|^Howto/,
+  test: /^howto|^Howto|^HOWTO/,
   action: 'airports/howto',
   resolve: async (action) => {
     result = 'สวัสดีค่ะ สามารถใช้งาน"เมตาโนะ"ได้ง่ายๆดังนี้ค่ะ\n\n' +

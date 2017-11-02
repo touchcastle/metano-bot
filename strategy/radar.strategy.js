@@ -5,7 +5,7 @@ var noStation = ''
 
 exports.radarStrategy = {
   //test: /^chart [0-9]{4}-[0-9]{2}-[0-9]{2}|^Chart [0-9]{4}-[0-9]{2}-[0-9]{2}/,
-  test: /(radar)|(Radar)/,
+  test: /(radar)|(Radar)|(RADAR)/,
   action: 'airports/radar',
   mapToPayload: (event) => {
     const words = event.text.split(' ')

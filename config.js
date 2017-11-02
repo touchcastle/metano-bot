@@ -3,7 +3,7 @@ const throwConfigError = (name) => { throw new Error(name) }
 const config = {
   //shortcutRegex: /(^[a-zA-Z]{5}\s[a-zA-Z]{4}$)|(^[a-zA-Z]{3}\s[a-zA-Z]{4}$)|(^[a-zA-Z]{4}\s[a-zA-Z]{4}$)|^.+/,
   shortcutRegex: /^.+/,
-  port: process.env.PORT || 6969,
+  port: process.env.PORT || 2525,
   botName: process.env.BOT_NAME || 'โมโมกะ',
   domain: process.env.DOMAIN || throwConfigError('Bot domain is undefined'),
   facebook: {

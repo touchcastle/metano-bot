@@ -3,7 +3,7 @@ const ALOFT_API = (aloftDate) =>
   `https://www.tmd.go.th/programs/uploads/maps/${aloftDate}_$time$_UpperWind850.jpg`
 
 exports.aloftStrategy = {
-  test: /(aloft)|(Aloft)/,
+  test: /(aloft)|(Aloft)|(ALOFT)/,
   action: 'airports/aloft',
   /*mapToPayload: (event) => {
     const words = event.text.split(' ')
@@ -53,8 +53,12 @@ exports.aloftStrategy = {
       }else{
         time = '01'
       }
-    }
-
+    }if(dd<10) {
+      dd = '0'+dd
+    } 
+    if(mm<10) {
+        mm = '0'+mm
+    } 
     aloftDate = yyyy+'-'+mm+'-'+dd;
     console.log(time)
     result = ALOFT_API(aloftDate)

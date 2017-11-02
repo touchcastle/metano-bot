@@ -53,7 +53,7 @@ exports.metarStrategy = {
 }
 
 exports.tafStrategy = {
-  test: /^taf [a-zA-Z]{4}$|^Taf [a-zA-Z]{4}$/,
+  test: /^taf [a-zA-Z]{4}$|^Taf [a-zA-Z]{4}$|^TAF [a-zA-Z]{4}$/,
   action: 'airports/taf',
   mapToPayload: (event) => {
     const words = event.text.split(' ')
@@ -91,7 +91,7 @@ exports.tafStrategy = {
 }
 
 exports.notamStrategy = {
-  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}/,
+  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$|^NOTAM [a-zA-Z]{4}$|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^NOTAM [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}|^NOTAM [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}/,
   action: 'airports/notam',
   mapToPayload: (event) => {
     const words = event.text.split(' ')
@@ -281,7 +281,7 @@ exports.notamStrategy = {
 }
 
 exports.infoStrategy = {
-  test: /^info [a-zA-Z]{4}$|^Info [a-zA-Z]{4}$/,
+  test: /^info [a-zA-Z]{4}$|^Info [a-zA-Z]{4}$|^INFO [a-zA-Z]{4}$/,
   action: 'airports/info',
   mapToPayload: (event) => {
     const words = event.text.split(' ')

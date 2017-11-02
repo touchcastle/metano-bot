@@ -4,7 +4,7 @@ const CHART_API = (chartDate) =>
 
 exports.chartStrategy = {
   //test: /^chart [0-9]{4}-[0-9]{2}-[0-9]{2}|^Chart [0-9]{4}-[0-9]{2}-[0-9]{2}/,
-  test: /(chart)|(Chart)/,
+  test: /(chart)|(Chart)|(CHART)/,
   action: 'airports/chart',
   /*mapToPayload: (event) => {
     const words = event.text.split(' ')
