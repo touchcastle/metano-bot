@@ -4,7 +4,7 @@ const METAR_API = (airportName) =>
 const TAF_API = (airportName) =>
   `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&stationString=${airportName}&hoursBeforeNow=3&mostRecentForEachStation=constraint`
 const NOTAM_API = (airportName) =>
-  `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=10`
+  `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=99`
 const INFO_API = (airportName) =>
   `https://v4p4sz5ijk.execute-api.us-east-1.amazonaws.com/anbdata/airports/locations/doc7910?api_key=${config.ICAO_API_KEY}&airports=${airportName}&format=json`
 
@@ -237,18 +237,24 @@ exports.notamStrategy = {
         "(ตัวอย่าง: notam vtbd C1234)\n\n")
         console.log('cut: '+outArr[0])
       }else{
-        outArr[0] = outArr[0].replace('$CUTTEXT$', '\n')
+        if(outArr[0]!=null){
+          outArr[0] = outArr[0].replace('$CUTTEXT$', '\n')
+        }
       }
       /*var outArrTemp = []
       for (var i = 0; i < rows; i++) {
 
       }*/
+      console.log('toomuch>'+tooMuch)
+      console.log('code>'+code)
+      console.log('foundCode>'+foundCode)
       if(tooMuch=='X'){
         return {
           type: 'text',
           text: 'ข้อมูล NOTAM มีจำนวนมากเกินกำหนด(มากกว่า 25 รายการ) กรุณาตรวจสอบจากแหล่งอื่นค่ะ'
         }
       }else if(code==''|((code!='')&&(foundCode=='X'))){
+        console.log('2')
         //if(outArr.length<=5){
           return outArr.map(text => ({ type:'text', text}))
         /*}else{
@@ -265,7 +271,7 @@ exports.notamStrategy = {
             text: str
           }
         }*/
-      }else if(code!=''&foundCode==''){
+      }else if(code!=''&&foundCode==''){
         return {
           type: 'text',
           text: 'เมตาโนะหาข้อมูล NOTAM ไม่พบค่ะ'
