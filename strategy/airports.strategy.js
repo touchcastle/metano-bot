@@ -204,8 +204,8 @@ exports.notamStrategy = {
         }
         //E)
         var eLength = (result.rows[i].iteme).length
-        //if ((eLength <= maxLengthE)|code!='') {
-        if (eLength <= maxLengthE) {
+        if ((eLength <= maxLengthE)|code!='') {
+        //if (eLength <= maxLengthE) {
           out += 'E) ' + (result.rows[i].iteme) + '\n'
         } else { 
           cutText = 'X'
@@ -221,7 +221,7 @@ exports.notamStrategy = {
         }
         //out += '\n'+'=========='+'\n\n'
         if(i==rows-1){
-          out += "\n==== จบรายงาน NOTAM ค่ะ ===="
+          out += "\n==== end of NOTAMs report ===="
         }else{
           out += '\n'
         }
