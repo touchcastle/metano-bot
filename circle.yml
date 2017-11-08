@@ -12,7 +12,7 @@ dependencies:
 
 compile:
   override:
-    - yarn build
+    - ./.bin/build.bash
 test:
   override:
     - yarn test
@@ -21,4 +21,4 @@ deployment:
   beta:
     branch: master
     commands:
-      - ./.bin/deploy.sh
+      - ./.bin/deploy.bash
