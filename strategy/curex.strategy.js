@@ -7,6 +7,8 @@ var amount = ''
 var from = ''
 var to = ''
 var total = ''
+var out = ''
+var amount_text = ''
 
 exports.curexStrategy = {
   test: /^[0-9]+[a-zA-Z]{6}|[a-zA-Z]{6}/,
@@ -42,14 +44,24 @@ exports.curexStrategy = {
     return result
   },
   messageReducer: async (error, result) => {
-    console.log('to.>>>>>>>> '+to)
-    console.log('3.>>>>>>>>'+result.rates[to])
-    total = result.rates[to] * amount
-    total = Number(parseFloat(total).toFixed(2)).toLocaleString()
+    if(from==to){
+      out = 'ก็เท่ากันสิคะ ถามได้'
+    }else if(result.error=='Invalid base'){
+      out = 'เมตาโนะไม่รู้จักสกุลเงิน '+from+' อ่าค่ะ'
+    }else if(typeof result.rates[to] == 'undefined'){
+      out = 'เมตาโนะไม่รู้จักสกุลเงิน '+to+' อ่าค่ะ'
+    }else{
+      console.log('to.>>>>>>>> '+to)
+      console.log('3.>>>>>>>>'+result.rates[to])
+      total = result.rates[to] * amount
+      total = Number(parseFloat(total).toFixed(2)).toLocaleString()
+      amount_text = Number(parseFloat(amount).toFixed(2)).toLocaleString()
+      out = amount_text+' '+from+' = '+total+' '+to+' ค่ะ'
+    }
     result = {}
     return {
       type: 'text',
-      text: (amount+' '+from+' = '+total+' '+to)
+      text: (out)
     }
   }
 }
