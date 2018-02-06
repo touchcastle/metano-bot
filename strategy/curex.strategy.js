@@ -57,6 +57,9 @@ exports.curexStrategy = {
       total = Number(parseFloat(total).toFixed(2)).toLocaleString()
       amount_text = Number(parseFloat(amount).toFixed(2)).toLocaleString()
       out = amount_text+' '+from+' = '+total+' '+to+' ค่ะ'
+      if(amount<0){
+        out = out+' สนุกมั้ย?'
+      }
     }
     result = {}
     return {
