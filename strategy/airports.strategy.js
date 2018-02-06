@@ -117,6 +117,7 @@ exports.notamStrategy = {
   messageReducer: async (error, result) => {
     if (result.total !== 0) {
       var rows = result.rows.length
+      var tooMuchRows = ''
       var out = ''
       var outArr = []
 
@@ -131,6 +132,10 @@ exports.notamStrategy = {
         box = Math.ceil(rows/5)
         maxInBox = 5
       }else{
+        box = Math.ceil(rows/5)
+        maxInBox = 5
+        tooMuchRows = rows
+        rows = 25
         tooMuch = 'X'
       }
       maxLengthE = (2000/maxInBox)-250
@@ -159,8 +164,12 @@ exports.notamStrategy = {
 
         if(code==''){  //only in normal report, not in specific notam report
           if(i==0){
-            out += "พบ NOTAM "+rows+" รายการ\n"
-            out += '$CUTTEXT$'
+            if(tooMuch==''){
+              out += "พบ NOTAM "+rows+" รายการ\n"
+            }else if(tooMuch=='X'){
+              out += '\n$TOOMUCH$'
+            }
+            out += '\n$CUTTEXT$'
           }
           out += (i + 1) + ')\n'
         }
@@ -232,6 +241,14 @@ exports.notamStrategy = {
       }
       console.log('cut: '+cutText)
       console.log('cut: '+outArr[0])
+
+      //Add remark for toomuch
+      if(cutText=='X'){
+        outArr[0] = outArr[0].replace('\n$TOOMUCH$', "* พบ NOTAM มากเกินกำหนด("+tooMuchRows+"รายการ) สามารถแสดงได้เพียง 25 รายการ\nรบกวนตรวจสอบจากแหล่งอื่นเพิ่มเติมด้วยนะคะ\n\n")
+        console.log('cut: '+outArr[0])
+      }
+
+      //Add remark for cuttext
       if(cutText=='X'){
         outArr[0] = outArr[0].replace('\n$CUTTEXT$', "** ข้อมูลบางส่วนได้ถูกตัดออกเนื่องจากมีความยาวเกินกำหนด สามารถระบุ series และ number ต่อท้ายเพื่ออ่านทั้งหมดได้ค่ะ\n"+
         "(ตัวอย่าง: notam vtbd C1234)\n\n")
@@ -248,12 +265,13 @@ exports.notamStrategy = {
       console.log('toomuch>'+tooMuch)
       console.log('code>'+code)
       console.log('foundCode>'+foundCode)
-      if(tooMuch=='X'){
+      /*if(tooMuch=='X'){
         return {
           type: 'text',
           text: 'ข้อมูล NOTAM มีจำนวนมากเกินกำหนด(มากกว่า 25 รายการ) กรุณาตรวจสอบจากแหล่งอื่นค่ะ'
         }
-      }else if(code==''|((code!='')&&(foundCode=='X'))){
+      }else*/
+      if(code==''|((code!='')&&(foundCode=='X'))){
         console.log('2')
         //if(outArr.length<=5){
           return outArr.map(text => ({ type:'text', text}))
