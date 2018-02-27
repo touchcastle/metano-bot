@@ -260,7 +260,6 @@ exports.notamStrategy = {
       }
       /*var outArrTemp = []
       for (var i = 0; i < rows; i++) {
-
       }*/
       console.log('toomuch>'+tooMuch)
       console.log('code>'+code)
