@@ -22,7 +22,7 @@ exports.radarStrategy = {
       var result = METAR_API(action.payload.station)
       if(action.payload.station=='cmp'){
         var fileType = 'jpg'
-      }else if(action.payload.station=='sat'){
+      }else if(action.payload.station=='sat'||action.payload.station=='pmi'){
         var fileType = 'png'
       }else{
         var fileType = 'gif'
