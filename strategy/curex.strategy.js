@@ -1,7 +1,7 @@
 const config = require('../config')
-const xCUREX_API = `http://api.fixer.io/latest?base=$fromCur$&symbols=$toCur$`
+const xCUREX_API = `http://data.fixer.io/api/latest?access_key=ec429406ddc2b1b4e398c59cdd007f54&base=$fromCur$&symbols=$toCur$`
 
-var CUREX_API = `http://api.fixer.io/latest?base=$fromCur$&symbols=$toCur$`
+var CUREX_API = `http://data.fixer.io/api/latest?access_key=ec429406ddc2b1b4e398c59cdd007f54&base=$fromCur$&symbols=$toCur$`
 var api = ''
 var amount = ''
 var from = ''
