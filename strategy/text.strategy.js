@@ -49,3 +49,18 @@ exports.errorStrategy = {
     }
   }
 }
+
+exports.howtoStrategy = {
+  test: /^id|^ID|^Id/,
+  action: 'airports/id',
+  resolve: async (action) => {
+    result = '@nqu0290r'
+    return result
+  },
+  messageReducer: async (error, result) => {
+    return {
+      type: 'text',
+      text: (result)
+    }
+  }
+}
