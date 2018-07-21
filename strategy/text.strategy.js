@@ -50,6 +50,7 @@ exports.errorStrategy = {
   }
 }
 
+//lastest ID
 exports.howtoStrategy = {
   test: /^id|^ID|^Id/,
   action: 'airports/id',
