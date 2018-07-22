@@ -35,7 +35,7 @@ exports.howtoStrategy = {
 }
 
 //lastest ID
-exports.howtoStrategy = {
+exports.idStrategy = {
   test: /^id|^ID|^Id/,
   action: 'airports/id',
   resolve: async (action) => {

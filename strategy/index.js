@@ -10,6 +10,7 @@ module.exports = [
   airport.tafStrategy,
   airport.notamStrategy,
   text.howtoStrategy,
+  text.idStrategy,
   airport.infoStrategy,
   chart.chartStrategy,
   aloft.aloftStrategy,
