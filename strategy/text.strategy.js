@@ -34,12 +34,12 @@ exports.howtoStrategy = {
   }
 }
 
-exports.errorStrategy = {
-  test: /^.+/,
-  action: 'airports/error',
+//lastest ID
+exports.howtoStrategy = {
+  test: /^id|^ID|^Id/,
+  action: 'airports/id',
   resolve: async (action) => {
-    result = 'ฉันไม่เข้าใจคำถามนี้ค่ะ\n'+
-             'สามารถตรวจสอบวิธีใช้งานได้จาก "howto" ค่ะ'
+    result = '@nqu0290r'
     return result
   },
   messageReducer: async (error, result) => {
@@ -50,12 +50,12 @@ exports.errorStrategy = {
   }
 }
 
-//lastest ID
-exports.howtoStrategy = {
-  test: /^id|^ID|^Id/,
-  action: 'airports/id',
+exports.errorStrategy = {
+  test: /^.+/,
+  action: 'airports/error',
   resolve: async (action) => {
-    result = '@nqu0290r'
+    result = 'ฉันไม่เข้าใจคำถามนี้ค่ะ\n'+
+             'สามารถตรวจสอบวิธีใช้งานได้จาก "howto" ค่ะ'
     return result
   },
   messageReducer: async (error, result) => {
