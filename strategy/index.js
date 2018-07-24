@@ -17,4 +17,5 @@ module.exports = [
   radar.radarStrategy,
   curex.curexStrategy,
   text.errorStrategy,
+  
 ]
