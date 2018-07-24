@@ -14,6 +14,7 @@ const INFO_API = (airportName) =>
   var maxInBox = 1
   var tooMuch = ''
   var cutText = ''
+  var set = ''
 
 exports.metarStrategy = {
   test: /^metar [a-zA-Z]{4}$|^Metar [a-zA-Z]{4}$/,
@@ -91,18 +92,23 @@ exports.tafStrategy = {
 }
 
 exports.notamStrategy = {
-  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$|^NOTAM [a-zA-Z]{4}$|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^NOTAM [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}|^NOTAM [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}/,
+  test: /^notam [a-zA-Z]{4}$|^Notam [a-zA-Z]{4}$|^NOTAM [a-zA-Z]{4}$|^Notam [a-zA-Z]{4} [0-9]{1}|^notam [a-zA-Z]{4} [0-9]{1}|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^NOTAM [a-zA-Z]{4} [a-zA-z]{1}[0-9]{4}|^notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}|^Notam [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}|^NOTAM [a-zA-Z]{4} [a-zA-z]{1}[0-9]{3}/,
   action: 'airports/notam',
   mapToPayload: (event) => {
     const words = event.text.split(' ')
     code = ''
+    set = ''
     foundCode = ''
     tooMuch = ''
     box = 1
     maxInBox = 1
     cutText = ''
     if(words[2]!=null){
-      code = words[2].toUpperCase()
+      if(words[2].length == 1){
+        set = words[2]
+      }else{
+        code = words[2].toUpperCase()
+      }
     }
     return {
       airportName: words[1].toUpperCase()
@@ -120,6 +126,7 @@ exports.notamStrategy = {
       var tooMuchRows = ''
       var out = ''
       var outArr = []
+      var start = 0
 
       var maxLengthE
       if(rows<=5){
@@ -134,14 +141,28 @@ exports.notamStrategy = {
       }else{
         box = Math.ceil(rows/5)
         maxInBox = 5
-        tooMuchRows = rows
-        rows = 25
-        tooMuch = 'X'
+        if(code==''){
+          tooMuchRows = rows
+          rows = 25
+          tooMuch = 'X'
+          //if set was input
+          if(set>0){
+            console.log('set='+set)
+            start = (set-1)*25
+            if(tooMuchRows - start <= 25){
+              rows = tooMuchRows
+            }else{
+              rows = start + 24
+            }
+          }
+        }
       }
       maxLengthE = (2000/maxInBox)-250
-
+      
+console.log('start = '+start)
+console.log('rows = '+rows)
       var index = 0
-      for (var i = 0; i < rows; i++) {
+      for (var i = start; i < rows; i++) {
 
         if(code!=''){
           var notamNO = result.rows[i].series + result.rows[i].number
