@@ -347,12 +347,15 @@ exports.infoStrategy = {
     } else {
       return {
         type: 'text',
+        text: 'บริการนี้ใช้ไม่ได้ชั่วคราว ขออภัยในความไม่สะดวกค่ะ'
+        /*
         text: 'Name: ' + (result[0].Location_Name) + '\n' +
         'State: ' + (result[0].State_Name) + '\n' +
         'ICAO Code: ' + (result[0].ICAO_Code) + '\n' +
         'IATA Code: ' + (result[0].IATA_Code) + '\n' +
         'Latitude: ' + (result[0].Latitude) + '\n' +
         'Longtitude: ' + (result[0].Longitude)
+        */
       }
     }
   }
