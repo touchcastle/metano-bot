@@ -1,4 +1,6 @@
 const config = require('../config')
+
+
 const METAR_API = (airportName) =>
   `https://aviationweather.gov/adds/dataserver_current/httpparam?datasource=metars&requestType=retrieve&format=csv&mostRecentForEachStation=constraint&hoursBeforeNow=99&stationString=${airportName}`
 const TAF_API = (airportName) =>
@@ -65,12 +67,12 @@ exports.tafStrategy = {
   resolve: async (action) => {
     const response = await global.fetch(TAF_API(action.payload.airportName))
     const result = await response.text()
-    console.log(result)
+    //console.log(result)
     return result
   },
   messageReducer: async (error, result) => {
     if (result.indexOf('0 results') <= 0) {
-      var pattern = /[A-Z]{3}.+?(?=,)/
+      var pattern = /TAF [A-Z]{4}.+?(?=,)/
       while ((match = pattern.exec(result)) !== null) {
         var splitedTaf = match[0].split(/(?=BECMG)|(?=TEMPO)|(?=FM)/g)
         var out = ""

@@ -1,4 +1,5 @@
 const airport = require('./airports.strategy')
+const follow = require('./follow.strategy')
 const chart = require('./chart.strategy')
 const aloft = require('./aloft.strategy')
 const radar = require('./radar.strategy')
@@ -8,7 +9,7 @@ const curex = require('./curex.strategy')
 module.exports = [
   airport.metarStrategy,
   airport.tafStrategy,
-  airport.notamStrategy,
+  follow.followStrategy,
   text.howtoStrategy,
   text.idStrategy,
   airport.infoStrategy,
