@@ -72,7 +72,7 @@ exports.tafStrategy = {
   },
   messageReducer: async (error, result) => {
     if (result.indexOf('0 results') <= 0) {
-      console.log(result)
+      //console.log(result)
       var pattern = /TAF [A-Z]{4}.+?(?=,)/
       while ((match = pattern.exec(result)) !== null) {
         var splitedTaf = match[0].split(/(?=BECMG)|(?=TEMPO)|(?=TREND)|(?=FM)/g)

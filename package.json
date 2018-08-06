@@ -23,7 +23,7 @@
     "express": "^4.15.4",
     "express-ping": "^1.4.0",
     "isomorphic-fetch": "^2.2.1",
-    "momoka-core-bot": "^2.6.6",
+    "momoka-core-bot": "^2.7.1",
     "mongo-in-memory": "^0.0.5",
     "mongoose": "^4.11.11",
     "node-line-messaging-api": "^0.19.0",

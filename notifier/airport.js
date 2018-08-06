@@ -11,7 +11,7 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
         {
             $group: {
                 _id: "$airport",
-                items: { $push: { usrId: "$USER_ID", metarUpd: "$metar_update", tafUpd: "$taf_update"}},
+                items: { $push: { usrId: "$USER_ID", metarUpd: "$metar_update", tafUpd: "$taf_update", lineToken: "$lineToken"}},
         }
         }]).toArray()
     console.log(notifications)
@@ -40,7 +40,7 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
             if (output_metar.text.match(pattern) ) {
 
                 //do not notify same metar
-                if(output_metar.text.substring(9,15) != item.metarUpd){
+                //if(output_metar.text.substring(9,15) != item.metarUpd){
                     messages.push(output_metar)
 
                     const db = await getConnection()
@@ -52,7 +52,7 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
                         metar_update: output_metar.text.substring(9,15)
                     }
                     })
-                }
+                //}
 
             }
             //check for significant weather in taf
@@ -83,10 +83,11 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
             }else{
                 messages = [{type:'text',text:'Weather alert for station: ' + notification._id},...messages]
             }
+            console.log('token>'+item.lineToken)
             const fetchOptions = {
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${config.line.token}`
+              Authorization: `Bearer ${item.lineToken}`
             },
             method: 'post',
             body: JSON.stringify({

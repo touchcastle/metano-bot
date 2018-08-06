@@ -13,7 +13,7 @@ var unfollow_txt = ''
       airportName: words[1].toUpperCase()
     }
   },
-  resolve: async (action) => {
+  resolve: async (action, botInfo) => {
 
     const db = await getDBConnection()
 
@@ -26,9 +26,11 @@ var unfollow_txt = ''
         }
       }]).toArray()
       if(checkFollowing.length == 0){
+        console.log(botInfo)
         await db.collection('airport-notification').insert({
           USER_ID: action.source.userId,
           airport: action.payload.airportName,
+          lineToken: botInfo.accessToken,
           metar_update: '',
           taf_update: ''
         })

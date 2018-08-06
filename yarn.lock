@@ -3028,9 +3028,9 @@ moment-timezone@^0.5.x:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
-momoka-core-bot@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/momoka-core-bot/-/momoka-core-bot-2.6.6.tgz#36f26b0b53fe317a26808d0e5f6f53cd36dde0c7"
+momoka-core-bot@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/momoka-core-bot/-/momoka-core-bot-2.7.1.tgz#2f34766517ddd8a4a42f33bddb6a589015d4df74"
   dependencies:
     "@line/bot-sdk" "^2.0.0"
     body-parser "^1.17.2"
