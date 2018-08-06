@@ -47,6 +47,7 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
                     await db.collection('airport-notification').update({
                     USER_ID: item.usrId,
                     airport: notification._id,
+                    lineToken: item.lineToken,
                     },{
                     $set: {
                         metar_update: output_metar.text.substring(9,15)
@@ -68,6 +69,7 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
                     await db.collection('airport-notification').update({
                       USER_ID: item.usrId,
                       airport: notification._id,
+                      lineToken: item.lineToken
                     },{
                       $set: {
                         //metar_update: 'UPD_MET'

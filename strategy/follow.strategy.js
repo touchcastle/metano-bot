@@ -87,7 +87,7 @@ exports.unfollowStrategy = {
       airportName: words[1].toUpperCase()
     }
   },
-  resolve: async (action) => {
+  resolve: async (action, botInfo) => {
 
       //REMOVE
       const db = await getDBConnection()
@@ -100,6 +100,7 @@ exports.unfollowStrategy = {
         await db.collection('airport-notification').remove({
           USER_ID: action.source.userId,
           airport: action.payload.airportName,
+          lineToken: botInfo.accessToken
         })
         unfollow_txt = 'Weather alert for station ' + airport + ' has been cancelled'
       }
