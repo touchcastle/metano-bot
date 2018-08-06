@@ -22,7 +22,8 @@ var unfollow_txt = ''
       {
         $match: {
             USER_ID: action.source.userId,
-            airport: action.payload.airportName
+            airport: action.payload.airportName,
+            lineToken: botInfo.accessToken
         }
       }]).toArray()
       if(checkFollowing.length == 0){
@@ -93,7 +94,8 @@ exports.unfollowStrategy = {
       const db = await getDBConnection()
       if (action.payload.airportName == 'ALL'){
         await db.collection('airport-notification').remove({
-          USER_ID: action.source.userId
+          USER_ID: action.source.userId,
+          lineToken: botInfo.accessToken
         })
         unfollow_txt = 'Weather alert for all station has been cancelled'
       }else{
