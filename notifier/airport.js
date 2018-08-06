@@ -3,7 +3,7 @@ const fetch = require('../strategy/airports.strategy')
 const config = require('../config')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 require('isomorphic-fetch')
-var pattern = /TSRA|\+RA|G[0-9]{2}KT/
+var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
     async function doNotifier() {
     const db = await getConnection()
     const airportNotifications = db.collection('airport-notification')
@@ -11,7 +11,7 @@ var pattern = /TSRA|\+RA|G[0-9]{2}KT/
         {
             $group: {
                 _id: "$airport",
-                userIds: { $push: "$USER_ID"}
+                items: { $push: { usrId: "$USER_ID", metarUpd: "$metar_update", tafUpd: "$taf_update"}},
         }
         }]).toArray()
     console.log(notifications)
@@ -34,16 +34,54 @@ var pattern = /TSRA|\+RA|G[0-9]{2}KT/
         const output_metar = await fetch.metarStrategy.messageReducer(null, result_metar)
         const output_taf = await fetch.tafStrategy.messageReducer(null, result_taf)
         //console.log(output)
-        for(let userId of notification.userIds){
+        for(let item of notification.items){
             let messages = []
+            //check for significant weather in metar
             if (output_metar.text.match(pattern) ) {
-                messages.push(output_metar)
+
+                //do not notify same metar
+                if(output_metar.text.substring(9,15) != item.metarUpd){
+                    messages.push(output_metar)
+
+                    const db = await getConnection()
+                    await db.collection('airport-notification').update({
+                    USER_ID: item.usrId,
+                    airport: notification._id,
+                    },{
+                    $set: {
+                        metar_update: output_metar.text.substring(9,15)
+                    }
+                    })
+                }
+
             }
+            //check for significant weather in taf
             if (output_taf.text.match(pattern) ) {
-                messages.push(output_taf)
+
+                //do not notify same taf
+                if(output_taf.text.substring(9,15) != item.tafUpd){
+                    messages.push(output_taf)
+
+                    console.log(output_taf)
+                    console.log(notification)
+                    const db = await getConnection()
+                    await db.collection('airport-notification').update({
+                      USER_ID: item.usrId,
+                      airport: notification._id,
+                    },{
+                      $set: {
+                        //metar_update: 'UPD_MET'
+                        taf_update: output_taf.text.substring(9,15)
+                      }
+                    })
+                }
+
             }
+            //if no significant weather, skip to next airport
             if (messages.length == 0){
                 continue
+            }else{
+                messages = [{type:'text',text:'Weather alert for station: ' + notification._id},...messages]
             }
             const fetchOptions = {
             headers: {
@@ -52,7 +90,7 @@ var pattern = /TSRA|\+RA|G[0-9]{2}KT/
             },
             method: 'post',
             body: JSON.stringify({
-                to: userId,
+                to: item.usrId,
                 messages
             })
           }
@@ -60,7 +98,5 @@ var pattern = /TSRA|\+RA|G[0-9]{2}KT/
         }
     }
 }
-
-
 
 module.exports = doNotifier

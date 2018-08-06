@@ -42,11 +42,13 @@ var pattern = /TSRA|\+RA|G[0-9]{2}KT/
             if (output_taf.text.match(pattern) ) {
                 messages.push(output_taf)
             }
+            
             if (messages.length == 0){
                 continue
             }else{
-                messages = [{type:'text',text:'weather aleart'},...messages]
+                messages = [{type:'text',text:'weather aleart: '},...messages]
             }
+            console.log(message)
             const fetchOptions = {
             headers: {
               'Content-Type': 'application/json',

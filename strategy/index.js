@@ -10,6 +10,7 @@ module.exports = [
   airport.metarStrategy,
   airport.tafStrategy,
   follow.followStrategy,
+  follow.unfollowStrategy,
   text.howtoStrategy,
   text.idStrategy,
   airport.infoStrategy,

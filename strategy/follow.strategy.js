@@ -1,27 +1,42 @@
 const config = require('../config')
 const getDBConnection = require('../connection')
-
+const airportNotifier = require('../notifier/airport')
+var airport = ''
+var unfollow_txt = ''
   exports.followStrategy = {
   test: /^follow [a-zA-Z]{4}$|^Follow [a-zA-Z]{4}$/,
   action: 'airports/follow',
   mapToPayload: (event) => {
     const words = event.text.split(' ')
+    airport = words[1].toUpperCase()
     return {
-      airportName: words[1]
+      airportName: words[1].toUpperCase()
     }
   },
   resolve: async (action) => {
-    //console.log(action)
-    //const response = await global.fetch(METAR_API(action.payload.airportName))
-    //const result = await response.text()
 
     const db = await getDBConnection()
-    await db.collection('airport-notification').insert({
-      USER_ID: action.source.userId,
-      airport: action.payload.airportName,
-      //metar_update: '',
-      //taf_update: ''
-    })
+
+    //const airportNotifications = db.collection('airport-notification')
+    const checkFollowing = await db.collection('airport-notification').aggregate([
+      {
+        $match: {
+            USER_ID: action.source.userId,
+            airport: action.payload.airportName
+        }
+      }]).toArray()
+      if(checkFollowing.length == 0){
+        await db.collection('airport-notification').insert({
+          USER_ID: action.source.userId,
+          airport: action.payload.airportName,
+          metar_update: '',
+          taf_update: ''
+        })
+        result = 'Start following significant weather for station ' + airport
+        airportNotifier()
+      }else{
+        result = 'Station ' + airport + ' has already been followed'
+      }
 
     /*
       //REMOVE
@@ -52,30 +67,48 @@ const getDBConnection = require('../connection')
     
   },
   messageReducer: async (error, result) => {
-    /*
-    if (result.indexOf('0 results') <= 0) {
-      var pattern = /[A-Z]{4}.+?(?=,)/
-      while ((match = pattern.exec(result)) !== null) {
-        var splitedTaf = match[0].split(/(?=BECMG)|(?=TEMPO)|(?=FM)/g)
-        var out = ""
-        for (var i = 0; i < splitedTaf.length; i++) {
-          out += splitedTaf[i] + '\n'
-        }
-        return {
-          type: 'text',
-          text: (out)
-        }
-      }
-    } else {
-      return {
-        type: 'text',
-        text: 'เมตาโนะหาข้อมูล METAR ไม่พบค่ะ'
-      }
-    }
-    */
+
     return {
       type: 'text',
-      text: 'start follow'
+      text: result
+    }
+  }
+}
+
+exports.unfollowStrategy = {
+  test: /^unfollow [a-zA-Z]{4}$|^Unfollow [a-zA-Z]{4}$|^Unfollow all$|^unfollow all$/,
+  action: 'airports/unfollow',
+  mapToPayload: (event) => {
+    const words = event.text.split(' ')
+    airport = words[1].toUpperCase()
+    return {
+      airportName: words[1].toUpperCase()
+    }
+  },
+  resolve: async (action) => {
+
+      //REMOVE
+      const db = await getDBConnection()
+      if (action.payload.airportName == 'ALL'){
+        await db.collection('airport-notification').remove({
+          USER_ID: action.source.userId
+        })
+        unfollow_txt = 'Weather alert for all station has been cancelled'
+      }else{
+        await db.collection('airport-notification').remove({
+          USER_ID: action.source.userId,
+          airport: action.payload.airportName,
+        })
+        unfollow_txt = 'Weather alert for station ' + airport + ' has been cancelled'
+      }
+
+    return result
+    
+  },
+  messageReducer: async (error, result) => {
+    return {
+      type: 'text',
+      text: unfollow_txt
     }
   }
 }

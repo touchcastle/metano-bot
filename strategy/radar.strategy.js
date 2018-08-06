@@ -29,10 +29,10 @@ exports.radarStrategy = {
       }
       var result = result.replace('$fileType$', fileType)
     }else if(noStation=='X'){
-      result = 'ดูภาพ Weather Radar พิมพ์คำว่า radar เว้นวรรคแล้วตามด้วยชื่อสถานีค่ะ\n\n' +
-      'รายชื่อสถานี:\n[sat-สัตหีบ]\n[svp-สุวรรณภูมิ]\n[lmp-ลำพูน]\n[kkn-ขอนแก่น]\n[ubn-อุบลฯ]\n[cmp-ชุมพร]\n[hhn-หัวหิน]\n' +
-      '[pmi-พิมาย]\n[psh-พิษณุโลก]\n\n' +
-      'ตัวอย่าง: Weather Radar สัตหีบ "radar sat"\n\n'
+      result = 'Please type "radar" follow by station listed below.\n\n' +
+      'Station list:\n[sat-Sattahip]\n[svp-Suvarnabhumi]\n[lmp-Lamphun]\n[kkn-Khonkaen]\n[ubn-Ubon]\n[cmp-Chumphon]\n[hhn-Huahin]\n' +
+      '[pmi-Pimai]\n[psh-Pitsanulok]\n\n' +
+      'Example: Weather Radar Sattahip "radar sat"\n\n'
     }
     return result
   },

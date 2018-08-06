@@ -12,7 +12,7 @@ module.exports = async () => {
     c = await db(
         process.env.MONGODB_URL,
         {
-            inmemory: isDev,
+            inmemory: false,
             seed: isDev ? {
                 'airport-notification': [
                     {

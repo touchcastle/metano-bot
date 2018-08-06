@@ -2,9 +2,9 @@ const config = require('../config')
 
 
 const METAR_API = (airportName) =>
-  `https://aviationweather.gov/adds/dataserver_current/httpparam?datasource=metars&requestType=retrieve&format=csv&mostRecentForEachStation=constraint&hoursBeforeNow=99&stationString=${airportName}`
+  `https://aviationweather.gov/adds/dataserver_current/httpparam?datasource=metars&requestType=retrieve&format=csv&mostRecentForEachStation=true&hoursBeforeNow=99&stationString=${airportName}`
 const TAF_API = (airportName) =>
-  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&stationString=${airportName}&hoursBeforeNow=3&mostRecentForEachStation=constraint`
+  `https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=tafs&requestType=retrieve&format=csv&stationString=${airportName}&hoursBeforeNow=3&mostRecentForEachStation=true`
 const NOTAM_API = (airportName) =>
   `https://api.autorouter.aero/v1.0/notam?itemas=[%22${airportName}%22]&offset=0&limit=99`
 const INFO_API = (airportName) =>
@@ -49,7 +49,7 @@ exports.metarStrategy = {
     } else {
       return {
         type: 'text',
-        text: 'เมตาโนะหาข้อมูล METAR ไม่พบค่ะ'
+        text: 'Sorry, I can\'t find METAR for this station'
       }
     }
   }
@@ -72,9 +72,10 @@ exports.tafStrategy = {
   },
   messageReducer: async (error, result) => {
     if (result.indexOf('0 results') <= 0) {
+      console.log(result)
       var pattern = /TAF [A-Z]{4}.+?(?=,)/
       while ((match = pattern.exec(result)) !== null) {
-        var splitedTaf = match[0].split(/(?=BECMG)|(?=TEMPO)|(?=FM)/g)
+        var splitedTaf = match[0].split(/(?=BECMG)|(?=TEMPO)|(?=TREND)|(?=FM)/g)
         var out = ""
         for (var i = 0; i < splitedTaf.length; i++) {
           out += splitedTaf[i] + '\n'
@@ -87,7 +88,7 @@ exports.tafStrategy = {
     } else {
       return {
         type: 'text',
-        text: 'เมตาโนะหาข้อมูล TAF ไม่พบค่ะ'
+        text: 'Sorry, I can\'t find TAFs for this station'
       }
     }
   }
@@ -188,7 +189,7 @@ console.log('rows = '+rows)
         if(code==''){  //only in normal report, not in specific notam report
           if(i==0){
             if(tooMuch==''){
-              out += "พบ NOTAM "+rows+" รายการ\n"
+              out += "found NOTAM "+rows+" record(s)\n"
             }else if(tooMuch=='X'){
               out += '\n$TOOMUCH$'
             }
@@ -267,13 +268,13 @@ console.log('rows = '+rows)
 
       //Add remark for toomuch
       if(cutText=='X'){
-        outArr[0] = outArr[0].replace('\n$TOOMUCH$', "* พบ NOTAM มากเกินกำหนด("+tooMuchRows+"รายการ) สามารถแสดงได้เพียง 25 รายการ\nรบกวนตรวจสอบจากแหล่งอื่นเพิ่มเติมด้วยนะคะ\n\n")
+        outArr[0] = outArr[0].replace('\n$TOOMUCH$', "* NOTAMs limit exceeded ("+tooMuchRows+"/25 NOTAMs) \nPlease don\'t forget to read all the rest from another source\n\n")
         console.log('cut: '+outArr[0])
       }
 
       //Add remark for cuttext
       if(cutText=='X'){
-        outArr[0] = outArr[0].replace('\n$CUTTEXT$', "** ข้อมูลบางส่วนได้ถูกตัดออกเนื่องจากมีความยาวเกินกำหนด สามารถระบุ series และ number ต่อท้ายเพื่ออ่านทั้งหมดได้ค่ะ\n"+
+        outArr[0] = outArr[0].replace('\n$CUTTEXT$', "** Some NOTAM was trimmed due to maximum lenght exceeded. Please type \"notam [station] [number]\" for full NOTAM\n"+
         "(ตัวอย่าง: notam vtbd C1234)\n\n")
         console.log('cut: '+outArr[0])
       }else{
@@ -314,13 +315,13 @@ console.log('rows = '+rows)
       }else if(code!=''&&foundCode==''){
         return {
           type: 'text',
-          text: 'เมตาโนะหาข้อมูล NOTAM ไม่พบค่ะ'
+          text: 'Sorry, I can\'t find NOTAM for this station'
         }
       }
     } else {
       return {
         type: 'text',
-        text: 'เมตาโนะหาข้อมูล NOTAM ไม่พบค่ะ'
+        text: 'Sorry, I can\'t find NOTAM for this station'
       }
     }
   }
@@ -344,20 +345,20 @@ exports.infoStrategy = {
     if (result[0] == null) {
       return {
         type: 'text',
-        text: 'ไม่มีข้อมูลค่ะ'
+        text: 'No data'
       }
     } else {
       return {
         type: 'text',
-        text: 'บริการนี้ใช้ไม่ได้ชั่วคราว ขออภัยในความไม่สะดวกค่ะ'
-        /*
+        //text: 'บริการนี้ใช้ไม่ได้ชั่วคราว ขออภัยในความไม่สะดวกค่ะ'
+        
         text: 'Name: ' + (result[0].Location_Name) + '\n' +
         'State: ' + (result[0].State_Name) + '\n' +
         'ICAO Code: ' + (result[0].ICAO_Code) + '\n' +
         'IATA Code: ' + (result[0].IATA_Code) + '\n' +
         'Latitude: ' + (result[0].Latitude) + '\n' +
         'Longtitude: ' + (result[0].Longitude)
-        */
+        
       }
     }
   }
