@@ -5,12 +5,14 @@ const aloft = require('./aloft.strategy')
 const radar = require('./radar.strategy')
 const text = require('./text.strategy')
 const curex = require('./curex.strategy')
+const admin = require('./admin.strategy')
 
 module.exports = [
   airport.metarStrategy,
   airport.tafStrategy,
   follow.followStrategy,
   follow.unfollowStrategy,
+  admin.tableStrategy,
   text.howtoStrategy,
   text.idStrategy,
   airport.infoStrategy,
