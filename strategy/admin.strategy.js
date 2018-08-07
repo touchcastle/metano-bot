@@ -22,7 +22,8 @@ exports.tableStrategy = {
       const db = await getDBConnection()
 
       const tables = await db.collection('airport-notification').find({}).toArray()
-      console.log(tables)
+      console.log(action)
+      out = 'ID: ' + action.source.userId + '\n\n'
       for(let table of tables){
         console.log('item> ' + table.USER_ID)
         //outArr = push(table.USER_ID + ' ' + table.airport + ' '+ table.metar_update + ' '+ table.taf_update)
