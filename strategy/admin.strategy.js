@@ -26,7 +26,7 @@ exports.tableStrategy = {
       for(let table of tables){
         console.log('item> ' + table.USER_ID)
         //outArr = push(table.USER_ID + ' ' + table.airport + ' '+ table.metar_update + ' '+ table.taf_update)
-        out += table.USER_ID + ' ' + table.airport + ' '+ table.metar_update + ' '+ table.taf_update + '\n'
+        out += table.USER_ID + ' | ' + table.lineToken.substring(0,10) + ' | ' + table.airport + ' | '+ table.metar_update + ' | ' + table.taf_update + '\n'
         //console.log(out)
       }
     result = out
