@@ -36,9 +36,9 @@ let messages = []
         const output_metar = await fetch.metarStrategy.messageReducer(null, result_metar)
         const output_taf = await fetch.tafStrategy.messageReducer(null, result_taf)
         //console.log(output)
+        var itemLen = notifications.items.length
+        messages.push({type:'text',text: itemLen})
         for(let item of notification.items){
-            var itemLen = notifications.items.length
-            messages.push({type:'text',text: itemLen})
             //check for significant weather in metar
             //console.log('text>>>> '+output_metar.text)
             if (output_metar.text.match(pattern) ) {
