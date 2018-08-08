@@ -17,8 +17,9 @@ let messages = []
         }]).toArray()
     //console.log(notifications)
     var notiLen = notifications.length
-    messages.push({type:'text',text: notiLen})
+    messages.push({type:'text',text: 'header = ' + notiLen})
     for(let notification of notifications){
+        console.log('curser > ' + notification._id)
         //fetch METAR
         const result_metar = await fetch.metarStrategy.resolve({
             payload: {
@@ -35,10 +36,13 @@ let messages = []
         //output METAR & TAF
         const output_metar = await fetch.metarStrategy.messageReducer(null, result_metar)
         const output_taf = await fetch.tafStrategy.messageReducer(null, result_taf)
+
+        console.log(output_taf)
         //console.log(output)
-        var itemLen = notifications.items.length
-        messages.push({type:'text',text: itemLen})
+        var itemLen = notification.items.length
+        messages.push({type:'text',text: 'item = ' + itemLen})
         for(let item of notification.items){
+            
             //check for significant weather in metar
             //console.log('text>>>> '+output_metar.text)
             if (output_metar.text.match(pattern) ) {
@@ -66,6 +70,7 @@ let messages = []
                 //do not notify same taf
                 //if(output_taf.text.substring(9,15) != item.tafUpd){
                     messages.push(output_taf)
+                    console.log(messages)
 
                     //console.log(output_taf)
                     //console.log(notification)
@@ -89,7 +94,7 @@ let messages = []
             }else{
                 messages = [{type:'text',text:'Weather alert for station: ' + notification._id},...messages]
             }
-            console.log('token>'+item.lineToken)
+            //console.log('token>'+item.lineToken)
             const fetchOptions = {
             headers: {
               'Content-Type': 'application/json',
@@ -102,7 +107,10 @@ let messages = []
             })
           }
             const result = await global.fetch(API_ENDPOINT, fetchOptions)
+            messages = []
         }
+
+        console.log('=====================')
     }
 }
 
