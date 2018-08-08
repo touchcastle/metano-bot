@@ -16,8 +16,8 @@ let messages = []
         }
         }]).toArray()
     //console.log(notifications)
-    //var notiLen = notifications.length
-    //messages.push({type:'text',text: 'header = ' + notiLen})
+    var notiLen = notifications.length
+    messages.push({type:'text',text: 'header = ' + notiLen})
     for(let notification of notifications){
         console.log('curser > ' + notification._id)
         //fetch METAR
@@ -39,8 +39,8 @@ let messages = []
 
         console.log(output_taf)
         //console.log(output)
-        //var itemLen = notification.items.length
-        //messages.push({type:'text',text: 'item = ' + itemLen})
+        var itemLen = notification.items.length
+        messages.push({type:'text',text: 'item = ' + itemLen})
         for(let item of notification.items){
             
             //check for significant weather in metar
