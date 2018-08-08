@@ -4,6 +4,7 @@ const config = require('../config')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 require('isomorphic-fetch')
 var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
+let messages = []
     async function doNotifier() {
     const db = await getConnection()
     const airportNotifications = db.collection('airport-notification')
@@ -14,8 +15,9 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
                 items: { $push: { usrId: "$USER_ID", metarUpd: "$metar_update", tafUpd: "$taf_update", lineToken: "$lineToken"}},
         }
         }]).toArray()
-    console.log(notifications)
-
+    //console.log(notifications)
+    var notiLen = notifications.length
+    messages.push({type:'text',text: notiLen})
     for(let notification of notifications){
         //fetch METAR
         const result_metar = await fetch.metarStrategy.resolve({
@@ -35,7 +37,8 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
         const output_taf = await fetch.tafStrategy.messageReducer(null, result_taf)
         //console.log(output)
         for(let item of notification.items){
-            let messages = []
+            var itemLen = notifications.items.length
+            messages.push({type:'text',text: itemLen})
             //check for significant weather in metar
             //console.log('text>>>> '+output_metar.text)
             if (output_metar.text.match(pattern) ) {
@@ -61,11 +64,11 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
             if (output_taf.text.match(pattern) ) {
 
                 //do not notify same taf
-                //if(output_taf.text.substring(9,15) != item.tafUpd){
+                if(output_taf.text.substring(9,15) != item.tafUpd){
                     messages.push(output_taf)
 
-                    console.log(output_taf)
-                    console.log(notification)
+                    //console.log(output_taf)
+                    //console.log(notification)
                     const db = await getConnection()
                     await db.collection('airport-notification').update({
                       USER_ID: item.usrId,
@@ -77,7 +80,7 @@ var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
                         taf_update: output_taf.text.substring(9,15)
                       }
                     })
-                //}
+                }
 
             }
             //if no significant weather, skip to next airport
