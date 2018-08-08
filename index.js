@@ -22,7 +22,7 @@ momoka(_config, strategies).then(async (bot) => {
 
   //cron
   var CronJob = require('cron').CronJob;
-  new CronJob('* 2 * * * *', function() {
+  new CronJob('2 * * * * *', function() {
     airportNotifier()
     //console.log('do noti')
   }, null, true, 'America/Los_Angeles');

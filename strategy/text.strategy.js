@@ -10,8 +10,8 @@ exports.howtoStrategy = {
     '2.) "taf vtbs" --- TAFs for VTBS\n' +
     '3.) "notam vtbs" --- List all NOTAM for VTBS (limit lenght & 25 NOTAMS maximum)\n' +
     '4.) "notam vtbs" c1234 --- Display VTBS NOTAM number c1234\n' +
-    '5.) "follow vtbs" --- Get notification for significant meteorological condition of VTBS\n' +
-    '6.) "unfollow vtbs" --- Cancel notification from VTBD\n' +
+    '5.) "follow vtbs"[TESTING] --- Get notification for significant meteorological condition of VTBS\n' +
+    '6.) "unfollow vtbs"[TESTING] --- Cancel notification from VTBD\n' +
     '7.) "info vtbs" --- Display VTBS information\n' +
     '8.) "radar sat" --- Display weather radar for Sattahip station\n' +
     'List: [sat-Sattahip],[svp-Suvarnabhumi],[lmp-Lamphun],[kkn-Khonkaen],[ubn-Ubon]\n' +
