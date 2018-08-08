@@ -36,7 +36,7 @@ var unfollow_txt = ''
           taf_update: ''
         })
         result = 'Start following significant weather for station ' + airport
-        airportNotifier()
+        //airportNotifier()
       }else{
         result = 'Station ' + airport + ' has already been followed'
       }
