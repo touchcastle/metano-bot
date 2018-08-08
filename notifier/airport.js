@@ -68,7 +68,13 @@ let messages = []
             if (output_taf.text.match(pattern) ) {
 
                 //do not notify same taf
-                //if(output_taf.text.substring(9,15) != item.tafUpd){
+                var tafTime = ''
+                if(output_taf.text.match(/COR/)){
+                    tafTime = output_taf.text.substring(13,19)
+                }else{
+                    tafTime = output_taf.text.substring(9,15)
+                }
+                //if(tafTime != item.tafUpd){
                     messages.push(output_taf)
                     console.log(messages)
 
@@ -82,7 +88,7 @@ let messages = []
                     },{
                       $set: {
                         //metar_update: 'UPD_MET'
-                        taf_update: output_taf.text.substring(9,15)
+                        taf_update: tafTime
                       }
                     })
                 //}
