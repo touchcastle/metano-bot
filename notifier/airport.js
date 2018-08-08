@@ -44,7 +44,7 @@ let messages = []
             if (output_metar.text.match(pattern) ) {
 
                 //do not notify same metar
-                if(output_metar.text.substring(5,11) != item.metarUpd){
+                //if(output_metar.text.substring(5,11) != item.metarUpd){
                     messages.push(output_metar)
 
                     const db = await getConnection()
@@ -57,14 +57,14 @@ let messages = []
                         metar_update: output_metar.text.substring(5,11)
                     }
                     })
-                }
+                //}
 
             }
             //check for significant weather in taf
             if (output_taf.text.match(pattern) ) {
 
                 //do not notify same taf
-                if(output_taf.text.substring(9,15) != item.tafUpd){
+                //if(output_taf.text.substring(9,15) != item.tafUpd){
                     messages.push(output_taf)
 
                     //console.log(output_taf)
@@ -80,7 +80,7 @@ let messages = []
                         taf_update: output_taf.text.substring(9,15)
                       }
                     })
-                }
+                //}
 
             }
             //if no significant weather, skip to next airport
