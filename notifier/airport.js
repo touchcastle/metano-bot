@@ -46,12 +46,13 @@ var chkTaf = ''
         for(let item of notification.items){
             chkMetar = ''
             chkTaf = ''
+            var metarTime = ''
             //check for significant weather in metar
             //console.log('text>>>> '+output_metar.text)
             if (output_metar.text.match(pattern) ) {
-
+                metarTime = output_metar.text.substring(5,11)
                 //do not notify same metar
-                if(output_metar.text.substring(5,11) != item.metarUpd){
+                if(metarTime != item.metarUpd){
                     output_metar.text = 'METAR: '.concat(output_metar.text)
                     messages.push(output_metar)
                     chkMetar = 'X'
@@ -62,7 +63,7 @@ var chkTaf = ''
                     lineToken: item.lineToken
                     },{
                     $set: {
-                        metar_update: output_metar.text.substring(5,11)
+                        metar_update: metarTime
                     }
                     })
                 }
