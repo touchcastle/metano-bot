@@ -267,8 +267,8 @@ console.log('rows = '+rows)
       console.log('cut: '+outArr[0])
 
       //Add remark for toomuch
-      if(cutText=='X'){
-        outArr[0] = outArr[0].replace('\n$TOOMUCH$', "* NOTAMs limit exceeded ("+tooMuchRows+"/25 NOTAMs) \nPlease don\'t forget to read all the rest from another source\n\n")
+      if(tooMuch=='X'){
+        outArr[0] = outArr[0].replace('$TOOMUCH$', "* NOTAMs limit exceeded ("+tooMuchRows+"/25 NOTAMs) \nPlease don\'t forget to read all the rest from another source\n")
         console.log('cut: '+outArr[0])
       }
 
