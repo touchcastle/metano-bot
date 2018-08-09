@@ -4,7 +4,8 @@ const chart = require('./chart.strategy')
 const aloft = require('./aloft.strategy')
 const radar = require('./radar.strategy')
 const text = require('./text.strategy')
-const curex = require('./curex.strategy')
+const location = require('./location.strategy')
+//const curex = require('./curex.strategy')
 const admin = require('./admin.strategy')
 
 module.exports = [
@@ -20,6 +21,7 @@ module.exports = [
   chart.chartStrategy,
   aloft.aloftStrategy,
   radar.radarStrategy,
-  curex.curexStrategy,
+  location.locationStrategy,
+  //curex.curexStrategy,
   text.errorStrategy,
 ]

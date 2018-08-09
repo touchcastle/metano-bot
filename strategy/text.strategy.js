@@ -10,14 +10,16 @@ exports.howtoStrategy = {
     '2.) "taf vtbs" --- TAFs for VTBS\n' +
     '3.) "notam vtbs" --- List all NOTAM for VTBS (limit lenght & 25 NOTAMS maximum)\n' +
     '4.) "notam vtbs" c1234 --- Display VTBS NOTAM number c1234\n' +
-    '5.) "follow vtbs"[TESTING] --- Get notification for significant meteorological condition of VTBS\n' +
-    '6.) "unfollow vtbs"[TESTING] --- Cancel notification from VTBD\n' +
-    '7.) "info vtbs" --- Display VTBS information\n' +
-    '8.) "radar sat" --- Display weather radar for Sattahip station\n' +
+    '5.) "loc 123628N1005632E" --- Show map of location\n' +
+    '6.) "follow vtbs"[TESTING] --- Get notification for significant meteorological condition of VTBS\n' +
+    '7.) "unfollow vtbs"[TESTING] --- Cancel notification from VTBD\n' +
+    '8.) "unfollow all"[TESTING] --- Cancel notification from every station\n' +
+    '9.) "info vtbs" --- Display VTBS information\n' +
+    '10.) "radar sat" --- Display weather radar for Sattahip station\n' +
     'List: [sat-Sattahip],[svp-Suvarnabhumi],[lmp-Lamphun],[kkn-Khonkaen],[ubn-Ubon]\n' +
     '[pmi-Pimai],[psh-Pitsanulok],[cmp-Chumphon],[hhn-Huahin]\n' +
-    '9.) "chart" --- Display Thailand weather chart\n' +
-    '10.) "aloft" --- Display Thailand wind aloft (5000ft)\n' +
+    '11.) "chart" --- Display Thailand weather chart\n' +
+    '12.) "aloft" --- Display Thailand wind aloft (5000ft)\n' +
     //'8.)ดูข้อมูลของสนามบิน\nพิมพ์คำว่า info เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
     //'\n(ตัวอย่าง: ข้อมูลของสนามบินดอนเมือง "info vtbd")\n\n' +
     //'8.)อัตราแลกเปลี่ยนเงินตราต่างประเทศ พิมพ์จำนวนเงิน ตามด้วย2สกุลเงินที่ต้องการเลยค่ะ'+
@@ -84,8 +86,15 @@ exports.errorStrategy = {
   },
   messageReducer: async (error, result) => {
     return {
+      type: 'location',
+      title: 'title',
+      address: 'address',
+      latitude: 16.4644444,
+      longitude: 102.78222222222222
+      /*
       type: 'text',
       text: (result)
+      */
     }
   }
 }
