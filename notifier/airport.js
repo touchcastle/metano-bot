@@ -5,6 +5,8 @@ const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 require('isomorphic-fetch')
 var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
 let messages = []
+var chkMetar = ''
+var chkTaf = ''
     async function doNotifier() {
     const db = await getConnection()
     const airportNotifications = db.collection('airport-notification')
@@ -42,15 +44,17 @@ let messages = []
         //var itemLen = notification.items.length
         //messages.push({type:'text',text: 'item = ' + itemLen})
         for(let item of notification.items){
-            
+            chkMetar = ''
+            chkTaf = ''
             //check for significant weather in metar
             //console.log('text>>>> '+output_metar.text)
             if (output_metar.text.match(pattern) ) {
 
                 //do not notify same metar
                 if(output_metar.text.substring(5,11) != item.metarUpd){
+                    output_metar.text = 'METAR: '.concat(output_metar.text)
                     messages.push(output_metar)
-
+                    chkMetar = 'X'
                     const db = await getConnection()
                     await db.collection('airport-notification').update({
                     USER_ID: item.usrId,
@@ -75,8 +79,10 @@ let messages = []
                     tafTime = output_taf.text.substring(9,15)
                 }
                 if(tafTime != item.tafUpd){
+                    output_taf.text = 'Forcast report. Publish at '.concat(tafTime).concat(' UTC\n\n').concat(output_taf.text)
                     messages.push(output_taf)
-                    console.log(messages)
+                    chkTaf = 'X'
+                    console.log(output_taf)
 
                     //console.log(output_taf)
                     //console.log(notification)
