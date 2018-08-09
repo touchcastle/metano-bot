@@ -10,6 +10,7 @@ const admin = require('./admin.strategy')
 module.exports = [
   airport.metarStrategy,
   airport.tafStrategy,
+  airport.notamStrategy,
   follow.followStrategy,
   follow.unfollowStrategy,
   admin.tableStrategy,
