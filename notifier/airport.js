@@ -36,8 +36,10 @@ var chkTaf = ''
         })
 
         //output METAR & TAF
-        const output_metar = await fetch.metarStrategy.messageReducer(null, result_metar)
-        const output_taf = await fetch.tafStrategy.messageReducer(null, result_taf)
+        var output_metar = ''
+        var output_taf = ''
+        output_metar = await fetch.metarStrategy.messageReducer(null, result_metar)
+        output_taf = await fetch.tafStrategy.messageReducer(null, result_taf)
 
         console.log(output_taf)
         //console.log(output)
@@ -67,7 +69,6 @@ var chkTaf = ''
                     }
                     })
                 }
-
             }
             //check for significant weather in taf
             if (output_taf.text.match(pattern) ) {
@@ -79,6 +80,7 @@ var chkTaf = ''
                 }else{
                     tafTime = output_taf.text.substring(9,15)
                 }
+                console.log('time> ' + tafTime)
                 if(tafTime != item.tafUpd){
                     output_taf.text = 'Forcast report. Publish at '.concat(tafTime).concat(' UTC\n\n').concat(output_taf.text)
                     messages.push(output_taf)
@@ -99,7 +101,7 @@ var chkTaf = ''
                       }
                     })
                 }
-
+                //output_taf.text = ''
             }
             //if no significant weather, skip to next airport
             if (messages.length == 0){
@@ -107,6 +109,7 @@ var chkTaf = ''
             }else{
                 messages = [{type:'text',text:'Weather alert for station: ' + notification._id},...messages]
             }
+            console.log(messages)
             //console.log('token>'+item.lineToken)
             const fetchOptions = {
             headers: {
