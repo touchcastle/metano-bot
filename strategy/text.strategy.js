@@ -9,7 +9,7 @@ exports.howtoStrategy = {
     '1.) "metar vtbs" --- METAR report for VTBS\n' +
     '2.) "taf vtbs" --- TAFs for VTBS\n' +
     '3.) "notam vtbs" --- List all NOTAM for VTBS (limit lenght & 25 NOTAMS maximum)\n' +
-    '4.) "notam vtbs" c1234 --- Display VTBS NOTAM number c1234\n' +
+    '4.) "notam vtbs c1234" --- Display VTBS NOTAM number c1234\n' +
     '5.) "loc 123628N1005632E" --- Show map of location\n' +
     '6.) "follow vtbs"[TESTING] --- Get notification for significant meteorological condition of VTBS\n' +
     '7.) "unfollow vtbs"[TESTING] --- Cancel notification from VTBD\n' +
@@ -86,15 +86,8 @@ exports.errorStrategy = {
   },
   messageReducer: async (error, result) => {
     return {
-      type: 'location',
-      title: 'title',
-      address: 'address',
-      latitude: 16.4644444,
-      longitude: 102.78222222222222
-      /*
       type: 'text',
       text: (result)
-      */
     }
   }
 }
