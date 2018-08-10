@@ -36,6 +36,7 @@ var chkTaf = ''
         })
 
         //output METAR & TAF
+        console.log('output_taf >> ' + output_taf)
         var output_metar = ''
         var output_taf = ''
         output_metar = await fetch.metarStrategy.messageReducer(null, result_metar)
@@ -55,7 +56,7 @@ var chkTaf = ''
                 metarTime = output_metar.text.substring(5,11)
                 //do not notify same metar
                 if(metarTime != item.metarUpd){
-                    output_metar.text = 'METAR: '.concat(output_metar.text)
+                    //output_metar.text = 'METAR: '.concat(output_metar.text)
                     messages.push(output_metar)
                     chkMetar = 'X'
                     const db = await getConnection()
@@ -82,7 +83,7 @@ var chkTaf = ''
                 }
                 console.log('time> ' + tafTime)
                 if(tafTime != item.tafUpd){
-                    output_taf.text = 'Forcast report. Publish at '.concat(tafTime).concat(' UTC\n\n').concat(output_taf.text)
+                    //output_taf.text = 'Forcast report. Publish at '.concat(tafTime).concat(' UTC\n\n').concat(output_taf.text)
                     messages.push(output_taf)
                     chkTaf = 'X'
                     console.log(output_taf)
