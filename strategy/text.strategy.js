@@ -14,12 +14,12 @@ exports.howtoStrategy = {
     '6.) "follow vtbs"[TESTING] --- Get notification for significant meteorological condition of VTBS\n\n' +
     '7.) "unfollow vtbs"[TESTING] --- Cancel notification from VTBD\n\n' +
     '8.) "unfollow all"[TESTING] --- Cancel notification from every station\n\n' +
-    '9.) "info vtbs" --- Display VTBS information\n\n' +
-    '10.) "radar sat" --- Display weather radar for Sattahip station\n' +
+    //'9.) "info vtbs" --- Display VTBS information\n\n' +
+    '9.) "radar sat" --- Display weather radar for Sattahip station\n' +
     'List: [sat-Sattahip],[svp-Suvarnabhumi],[lmp-Lamphun],[kkn-Khonkaen],[ubn-Ubon]' +
     '[pmi-Pimai],[psh-Pitsanulok],[cmp-Chumphon],[hhn-Huahin]\n\n' +
-    '11.) "chart" --- Display Thailand weather chart\n\n' +
-    '12.) "aloft" --- Display Thailand wind aloft (5000ft)\n\n' +
+    '10.) "chart" --- Display Thailand weather chart\n\n' +
+    '11.) "aloft" --- Display Thailand wind aloft (5000ft)\n\n' +
     //'8.)ดูข้อมูลของสนามบิน\nพิมพ์คำว่า info เว้นวรรคแล้วตามด้วย ICAO code ของสนามบินนั้นๆค่ะ' +
     //'\n(ตัวอย่าง: ข้อมูลของสนามบินดอนเมือง "info vtbd")\n\n' +
     //'8.)อัตราแลกเปลี่ยนเงินตราต่างประเทศ พิมพ์จำนวนเงิน ตามด้วย2สกุลเงินที่ต้องการเลยค่ะ'+
