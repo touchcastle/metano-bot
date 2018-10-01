@@ -81,6 +81,7 @@ exports.locationStrategy = {
         latlon[0] = latlon[0].concat('S')
       }*/
 
+      
       //console.log(latlon)
     }
     result = 'X'
