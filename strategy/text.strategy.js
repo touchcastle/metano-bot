@@ -11,9 +11,9 @@ exports.howtoStrategy = {
     '3.) "notam vtbs" --- List all NOTAM for VTBS (limited lenght & 25 NOTAMS maximum)\n\n' +
     '4.) "notam vtbs c1234" --- Display VTBS NOTAM number c1234\n\n' +
     '5.) "loc 123628N1005632E" --- Show map of location by DHM format\n\n' +
-    '6.) "follow vtbs"[TESTING] --- Get notification for significant meteorological condition of VTBS\n\n' +
-    '7.) "unfollow vtbs"[TESTING] --- Cancel notification from VTBD\n\n' +
-    '8.) "unfollow all"[TESTING] --- Cancel notification from every station\n\n' +
+    '6.) "follow vtbs" --- Get notification for significant meteorological condition of VTBS\n\n' +
+    '7.) "unfollow vtbs" --- Cancel notification from VTBD\n\n' +
+    '8.) "unfollow all" --- Cancel notification from every station\n\n' +
     //'9.) "info vtbs" --- Display VTBS information\n\n' +
     '9.) "radar sat" --- Display weather radar for Sattahip station\n' +
     'List: [sat-Sattahip],[svp-Suvarnabhumi],[lmp-Lamphun],[kkn-Khonkaen],[ubn-Ubon]' +
