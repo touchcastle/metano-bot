@@ -26,7 +26,7 @@ momoka(_config, strategies).then(async (bot) => {
       secret: process.env.LINE_CHANNEL_SECRET_3,
       token: process.env.LINE_CHANNEL_TOKEN_3
     }
-  })
+  }) 
 
   //cron
   var CronJob = require('cron').CronJob;
