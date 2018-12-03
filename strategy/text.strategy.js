@@ -65,7 +65,7 @@ exports.idStrategy = {
   test: /^id|^ID|^Id/,
   action: 'airports/id',
   resolve: async (action) => {
-    result = '@nqu0290r'
+    result = '2:@nqu0290r\n3:@udh3105o'
     return result
   },
   messageReducer: async (error, result) => {
