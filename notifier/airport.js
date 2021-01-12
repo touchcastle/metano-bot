@@ -4,7 +4,7 @@ const config = require('../config')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 require('isomorphic-fetch')
 //var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
-var pattern = / TS|RA|WS|SEV|GR|ICE|FZ|DS| SS|FC|SN|VA|FG/
+var pattern = /TS|RA|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
 let messages = []
 var chkMetar = ''
 var chkTaf = ''
@@ -53,7 +53,7 @@ var chkTaf = ''
             var metarTime = ''
             //check for significant weather in metar
             //console.log('text>>>> '+output_metar.text)
-            if (output_metar.text.match(pattern) ) {
+            if (output_metar.text.substring(5,text.length).match(pattern) ) {
                 metarTime = output_metar.text.substring(5,11)
                 //do not notify same metar
                 if(metarTime != item.metarUpd){
@@ -73,7 +73,7 @@ var chkTaf = ''
                 }
             }
             //check for significant weather in taf
-            if (output_taf.text.match(pattern) ) {
+            if (output_taf.text.substring(8,text.length).match(pattern) ) {
 
                 //do not notify same taf
                 var tafTime = ''
