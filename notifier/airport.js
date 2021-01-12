@@ -4,7 +4,7 @@ const config = require('../config')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 require('isomorphic-fetch')
 //var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
-var pattern = /TS|RA|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG|9999/
+var pattern = /TS|RA|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG|9000/
 let messages = []
 var chkMetar = ''
 var chkTaf = ''
