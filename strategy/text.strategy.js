@@ -5,7 +5,7 @@ exports.howtoStrategy = {
   action: 'airports/howto',
   resolve: async (action) => {
     //ENG
-    result = 'SAWASDEE KA! Let\'s talk! \n\n' + 
+    result = 'SAWASDEE KA!! Let\'s talk! \n\n' + 
     '1.) "metar vtbs" --- METAR report for VTBS\n\n' +
     '2.) "taf vtbs" --- TAFs for VTBS\n\n' +
     '3.) "notam vtbs" --- List all NOTAM for VTBS (limited lenght & 25 NOTAMS maximum)\n\n' +
