@@ -10,3 +10,7 @@ Metano is airport information report bot, Metano is one of Momoka family directl
 ```
 npm run build-and-deploy
 ```
+into
+```
+root@rungsikorn.rocks
+```
