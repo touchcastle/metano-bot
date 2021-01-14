@@ -110,7 +110,7 @@ var chkTaf = ''
             //if no significant weather, skip to next airport
             if (messages.length == 0){
                 //continue
-                messages = [{type:'text',text:'Weather good for station: ' + notification._id},...messages]
+                messages = [{type:'text',text:'No significant weather at ' + notification._id}]
             }else{
                 messages = [{type:'text',text:'Weather alert for station: ' + notification._id},...messages]
             }
