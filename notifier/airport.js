@@ -4,7 +4,7 @@ const config = require('../config')
 const API_ENDPOINT = 'https://api.line.me/v2/bot/message/push'
 require('isomorphic-fetch')
 //var pattern = /TS|\+RA|G[0-9]{2}KT|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
-var pattern = /TS|RA|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG|KT/
+var pattern = /TS|RA|WS|SEV|GR|ICE|FZ|DS|SS|FC|SN|VA|FG/
 let messages = []
 var chkMetar = ''
 var chkTaf = ''
@@ -109,7 +109,8 @@ var chkTaf = ''
             }
             //if no significant weather, skip to next airport
             if (messages.length == 0){
-                continue
+                //continue
+                messages = [{type:'text',text:'Weather good for station: ' + notification._id},...messages]
             }else{
                 messages = [{type:'text',text:'Weather alert for station: ' + notification._id},...messages]
             }
