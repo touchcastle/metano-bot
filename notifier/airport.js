@@ -53,7 +53,8 @@ var chkTaf = ''
             var metarTime = ''
             //check for significant weather in metar
             //console.log('text>>>> '+output_metar.text)
-            if (output_metar.text.substring(5,text.length).match(pattern) ) {
+            if (output_metar.text.match(pattern) ) {
+            //if (output_metar.text.substring(5,text.length).match(pattern) ) {
                 metarTime = output_metar.text.substring(5,11)
                 //do not notify same metar
                 if(metarTime != item.metarUpd){
@@ -73,7 +74,8 @@ var chkTaf = ''
                 }
             }
             //check for significant weather in taf
-            if (output_taf.text.substring(8,text.length).match(pattern) ) {
+            if (output_taf.text.match(pattern) ) {
+            //if (output_taf.text.substring(8,text.length).match(pattern) ) {
 
                 //do not notify same taf
                 var tafTime = ''
